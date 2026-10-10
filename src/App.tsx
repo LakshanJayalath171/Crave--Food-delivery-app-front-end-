@@ -4,7 +4,7 @@ import Home from "./pages/Home"
 
 const App = () => {
   return (
-    <div className="px-10">
+    <div >
       <Routes>
         <Route path="/" element={<Home/>} />
         <Route path="/explore/:id" element={<Explore/>} />

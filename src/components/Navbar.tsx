@@ -2,7 +2,7 @@ import { Bell, MapPin, Search } from "lucide-react"
 
 const Navbar = () => {
   return (
-    <nav className="flex items-center justify-between py-2">
+    <nav className="flex items-center justify-between py-2 px-10">
         {/* left */}
         <div>
             <img src="/logo.svg" className="w-24 h-10"/>
