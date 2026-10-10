@@ -1,0 +1,567 @@
+@import url('https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap');
+
+
+@import "tailwindcss";
+
+body {
+  font-family: 'Plus Jakarta Sans', sans-serif;
+}
+
+/* =========================================================
+   CRAVE â€” Custom Design System
+   Tailwind CSS compatible custom classes
+   Palette: warm orange, cream, and charcoal
+   ========================================================= */
+
+/* Tailwind CSS v3 entry points.
+   If your project uses Tailwind CSS v4, replace these three
+   directives with: @import "tailwindcss";
+*/
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+/* 1. Design tokens */
+:root {
+  --crave-primary: #F97316;
+  --crave-primary-hover: #EA580C;
+  --crave-deep-orange: #C2410C;
+  --crave-soft-orange: #FFF0E5;
+  --crave-background: #FFF9F3;
+  --crave-surface: #FFFFFF;
+  --crave-secondary-background: #FFF1E6;
+  --crave-dark-surface: #241A17;
+  --crave-text: #241A17;
+  --crave-text-secondary: #786B65;
+  --crave-text-muted: #9A8B83;
+  --crave-text-on-dark: #FFF9F3;
+  --crave-border: #F0E4D9;
+  --crave-border-strong: #D9C8BB;
+  --crave-focus: #FDBA74;
+  --crave-success: #16A34A;
+  --crave-success-bg: #DCFCE7;
+  --crave-warning: #D97706;
+  --crave-warning-bg: #FEF3C7;
+  --crave-error: #DC2626;
+  --crave-error-bg: #FEE2E2;
+  --crave-rating: #F59E0B;
+  --crave-discount: #E11D48;
+  --crave-gradient: linear-gradient(135deg, #FB923C 0%, #F97316 100%);
+  --crave-dark-gradient: linear-gradient(135deg, #241A17 0%, #493026 100%);
+  --crave-radius-sm: 0.5rem;
+  --crave-radius-md: 0.75rem;
+  --crave-radius-lg: 1rem;
+  --crave-radius-xl: 1.25rem;
+  --crave-shadow-card: 0 8px 24px rgba(36, 26, 23, 0.06);
+  --crave-shadow-hover: 0 14px 34px rgba(36, 26, 23, 0.10);
+}
+
+/* 2. Base defaults */
+@layer base {
+  html {
+    scroll-behavior: smooth;
+  }
+
+  body {
+    background: var(--crave-background);
+    color: var(--crave-text);
+    font-family: Inter, "Plus Jakarta Sans", ui-sans-serif, system-ui, -apple-system,
+      BlinkMacSystemFont, "Segoe UI", sans-serif;
+    -webkit-font-smoothing: antialiased;
+    text-rendering: optimizeLegibility;
+  }
+
+  ::selection {
+    color: var(--crave-text-on-dark);
+    background: var(--crave-primary);
+  }
+
+  :focus-visible {
+    outline: 3px solid var(--crave-focus);
+    outline-offset: 3px;
+  }
+
+  button,
+  input,
+  textarea,
+  select {
+    font: inherit;
+  }
+
+  img {
+    max-width: 100%;
+  }
+}
+
+/* 3. Text color classes */
+@layer components {
+  .text-special,
+  .text-primary {
+    color: var(--crave-primary);
+  }
+
+  .text-primary-hover {
+    color: var(--crave-primary-hover);
+  }
+
+  .text-deep-orange {
+    color: var(--crave-deep-orange);
+  }
+
+  .text-main {
+    color: var(--crave-text);
+  }
+
+  .text-secondary {
+    color: var(--crave-text-secondary);
+  }
+
+  .text-muted {
+    color: var(--crave-text-muted);
+  }
+
+  .text-on-dark {
+    color: var(--crave-text-on-dark);
+  }
+
+  .text-success {
+    color: var(--crave-success);
+  }
+
+  .text-warning {
+    color: var(--crave-warning);
+  }
+
+  .text-error {
+    color: var(--crave-error);
+  }
+
+  .text-rating {
+    color: var(--crave-rating);
+  }
+
+  .text-discount {
+    color: var(--crave-discount);
+  }
+
+  /* 4. Background color classes */
+  .bg-special,
+  .bg-primary {
+    background-color: var(--crave-primary);
+  }
+
+  .bg-primary-hover {
+    background-color: var(--crave-primary-hover);
+  }
+
+  .bg-deep-orange {
+    background-color: var(--crave-deep-orange);
+  }
+
+  .bg-soft-orange {
+    background-color: var(--crave-soft-orange);
+  }
+
+  .bg-page {
+    background-color: var(--crave-background);
+  }
+
+  .bg-surface {
+    background-color: var(--crave-surface);
+  }
+
+  .bg-secondary {
+    background-color: var(--crave-secondary-background);
+  }
+
+  .bg-dark {
+    background-color: var(--crave-dark-surface);
+    color: var(--crave-text-on-dark);
+  }
+
+  .bg-success {
+    background-color: var(--crave-success-bg);
+  }
+
+  .bg-warning {
+    background-color: var(--crave-warning-bg);
+  }
+
+  .bg-error {
+    background-color: var(--crave-error-bg);
+  }
+
+  .bg-gradient-special {
+    background: var(--crave-gradient);
+  }
+
+  .bg-gradient-dark {
+    background: var(--crave-dark-gradient);
+    color: var(--crave-text-on-dark);
+  }
+
+  /* 5. Gradient text */
+  .text-gradient-special {
+    color: var(--crave-primary);
+    background: var(--crave-gradient);
+    -webkit-background-clip: text;
+    background-clip: text;
+    -webkit-text-fill-color: transparent;
+  }
+
+  /* 6. Border classes */
+  .border-special {
+    border: 1px solid var(--crave-primary);
+  }
+
+  .border-default {
+    border: 1px solid var(--crave-border);
+  }
+
+  .border-strong {
+    border: 1px solid var(--crave-border-strong);
+  }
+
+  .border-top-default {
+    border-top: 1px solid var(--crave-border);
+  }
+
+  .border-bottom-default {
+    border-bottom: 1px solid var(--crave-border);
+  }
+
+  /* Gradient outline only â€” transparent background */
+  .btn-secondary {
+    position: relative;
+    isolation: isolate;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: 0.5rem;
+    border: 1px solid transparent;
+    border-radius: 0.75rem;
+    padding: 0.7rem 1.15rem;
+    color: var(--crave-primary);
+    background:
+      linear-gradient(var(--crave-surface), var(--crave-surface)) padding-box,
+      var(--crave-gradient) border-box;
+    font-weight: 600;
+    line-height: 1.25;
+    text-decoration: none;
+    cursor: pointer;
+    transition: color 180ms ease, box-shadow 180ms ease, transform 180ms ease;
+  }
+
+  .btn-secondary:hover {
+    color: var(--crave-deep-orange);
+    box-shadow: 0 0 0 3px rgba(249, 115, 22, 0.10);
+  }
+
+  .btn-secondary:active {
+    transform: translateY(1px);
+  }
+
+  .btn-secondary:disabled {
+    opacity: 0.55;
+    cursor: not-allowed;
+    transform: none;
+    box-shadow: none;
+  }
+
+  /* 7. Button classes */
+  .btn-primary {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: 0.5rem;
+    border: 1px solid transparent;
+    border-radius: 0.75rem;
+    padding: 0.75rem 1.25rem;
+    background: var(--crave-gradient);
+    color: #FFFFFF;
+    font-weight: 600;
+    line-height: 1.25;
+    text-decoration: none;
+    box-shadow: 0 4px 12px rgba(249, 115, 22, 0.18);
+    cursor: pointer;
+    transition: background 180ms ease, box-shadow 180ms ease, transform 180ms ease;
+  }
+
+  .btn-primary:hover {
+    background: linear-gradient(135deg, #F97316 0%, #EA580C 100%);
+    box-shadow: 0 7px 18px rgba(249, 115, 22, 0.24);
+  }
+
+  .btn-primary:active {
+    transform: translateY(1px);
+  }
+
+  .btn-primary:disabled {
+    opacity: 0.55;
+    cursor: not-allowed;
+    box-shadow: none;
+  }
+
+  .btn-dark {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: 0.5rem;
+    border: 1px solid var(--crave-dark-surface);
+    border-radius: 0.75rem;
+    padding: 0.75rem 1.25rem;
+    background: var(--crave-dark-gradient);
+    color: var(--crave-text-on-dark);
+    font-weight: 600;
+    text-decoration: none;
+    cursor: pointer;
+    transition: opacity 180ms ease, transform 180ms ease;
+  }
+
+  .btn-dark:hover {
+    opacity: 0.92;
+  }
+
+  .btn-ghost {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: 0.5rem;
+    border: 1px solid transparent;
+    border-radius: 0.75rem;
+    padding: 0.7rem 1rem;
+    background: transparent;
+    color: var(--crave-text-secondary);
+    font-weight: 600;
+    text-decoration: none;
+    cursor: pointer;
+    transition: color 180ms ease, background 180ms ease;
+  }
+
+  .btn-ghost:hover {
+    background: var(--crave-soft-orange);
+    color: var(--crave-deep-orange);
+  }
+
+  /* 8. Cards and layout surfaces */
+  .card-special {
+    border: 1px solid var(--crave-border);
+    border-radius: var(--crave-radius-lg);
+    background: var(--crave-surface);
+    box-shadow: var(--crave-shadow-card);
+  }
+
+  .card-hover {
+    transition: transform 200ms ease, box-shadow 200ms ease, border-color 200ms ease;
+  }
+
+  .card-hover:hover {
+    transform: translateY(-3px);
+    border-color: var(--crave-border-strong);
+    box-shadow: var(--crave-shadow-hover);
+  }
+
+  .card-orange {
+    border: 1px solid #FED7AA;
+    border-radius: var(--crave-radius-lg);
+    background: var(--crave-soft-orange);
+  }
+
+  .card-dark {
+    border: 1px solid rgba(255, 249, 243, 0.10);
+    border-radius: var(--crave-radius-lg);
+    background: var(--crave-dark-surface);
+    color: var(--crave-text-on-dark);
+    box-shadow: var(--crave-shadow-card);
+  }
+
+  .section-special {
+    padding-block: clamp(3rem, 6vw, 5.5rem);
+  }
+
+  .container-special {
+    width: min(100% - 2rem, 1280px);
+    margin-inline: auto;
+  }
+
+  /* 9. Form controls */
+  .input-special {
+    display: block;
+    width: 100%;
+    min-height: 2.875rem;
+    border: 1px solid var(--crave-border-strong);
+    border-radius: 0.75rem;
+    padding: 0.7rem 0.9rem;
+    background: var(--crave-surface);
+    color: var(--crave-text);
+    outline: none;
+    transition: border-color 160ms ease, box-shadow 160ms ease;
+  }
+
+  .input-special::placeholder {
+    color: var(--crave-text-muted);
+  }
+
+  .input-special:focus {
+    border-color: var(--crave-primary);
+    box-shadow: 0 0 0 3px rgba(249, 115, 22, 0.14);
+  }
+
+  .input-special:disabled {
+    background: var(--crave-secondary-background);
+    color: var(--crave-text-muted);
+    cursor: not-allowed;
+  }
+
+  .input-error {
+    border-color: var(--crave-error);
+  }
+
+  .input-error:focus {
+    border-color: var(--crave-error);
+    box-shadow: 0 0 0 3px rgba(220, 38, 38, 0.12);
+  }
+
+  .label-special {
+    display: block;
+    margin-bottom: 0.4rem;
+    color: var(--crave-text);
+    font-size: 0.875rem;
+    font-weight: 600;
+  }
+
+  /* 10. Badges and status indicators */
+  .badge-special {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.35rem;
+    border-radius: 9999px;
+    padding: 0.3rem 0.65rem;
+    background: var(--crave-soft-orange);
+    color: var(--crave-deep-orange);
+    font-size: 0.75rem;
+    font-weight: 700;
+    line-height: 1.2;
+  }
+
+  .badge-success {
+    display: inline-flex;
+    align-items: center;
+    border-radius: 9999px;
+    padding: 0.3rem 0.65rem;
+    background: var(--crave-success-bg);
+    color: var(--crave-success);
+    font-size: 0.75rem;
+    font-weight: 700;
+  }
+
+  .badge-warning {
+    display: inline-flex;
+    align-items: center;
+    border-radius: 9999px;
+    padding: 0.3rem 0.65rem;
+    background: var(--crave-warning-bg);
+    color: var(--crave-warning);
+    font-size: 0.75rem;
+    font-weight: 700;
+  }
+
+  .badge-error {
+    display: inline-flex;
+    align-items: center;
+    border-radius: 9999px;
+    padding: 0.3rem 0.65rem;
+    background: var(--crave-error-bg);
+    color: var(--crave-error);
+    font-size: 0.75rem;
+    font-weight: 700;
+  }
+
+  .badge-discount {
+    display: inline-flex;
+    align-items: center;
+    border-radius: 9999px;
+    padding: 0.3rem 0.65rem;
+    background: #FFF1F2;
+    color: var(--crave-discount);
+    font-size: 0.75rem;
+    font-weight: 700;
+  }
+
+  /* 11. Navigation and icon surfaces */
+  .nav-link-special {
+    color: var(--crave-text-secondary);
+    font-weight: 500;
+    text-decoration: none;
+    transition: color 160ms ease;
+  }
+
+  .nav-link-special:hover,
+  .nav-link-special[aria-current="page"] {
+    color: var(--crave-primary);
+  }
+
+  .nav-item-active {
+    border-radius: 0.75rem;
+    background: var(--crave-soft-orange);
+    color: var(--crave-deep-orange);
+  }
+
+  .icon-box-special {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    width: 2.75rem;
+    height: 2.75rem;
+    flex-shrink: 0;
+    border-radius: 0.875rem;
+    background: var(--crave-soft-orange);
+    color: var(--crave-primary);
+  }
+
+  /* 12. Food and price helpers */
+  .food-image {
+    display: block;
+    width: 100%;
+    aspect-ratio: 4 / 3;
+    object-fit: cover;
+    border-radius: var(--crave-radius-md);
+  }
+
+  .price-special {
+    color: var(--crave-deep-orange);
+    font-weight: 800;
+    font-variant-numeric: tabular-nums;
+  }
+
+  .rating-special {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.25rem;
+    color: var(--crave-rating);
+    font-weight: 700;
+  }
+
+  .divider-special {
+    height: 1px;
+    border: 0;
+    background: var(--crave-border);
+  }
+
+  /* 13. Accessible focus and reduced motion */
+  .focus-special:focus-visible {
+    outline: 3px solid var(--crave-focus);
+    outline-offset: 3px;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    scroll-behavior: auto !important;
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+  }
+}
