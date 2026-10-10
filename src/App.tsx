@@ -1,6 +1,15 @@
+import { Route, Routes } from "react-router-dom"
+import Explore from "./pages/Explore"
+import Home from "./pages/Home"
+
 const App = () => {
   return (
-    <div>App</div>
+    <div className="px-10">
+      <Routes>
+        <Route path="/" element={<Home/>} />
+        <Route path="/explore/:id" element={<Explore/>} />
+      </Routes>
+    </div>
   )
 }
 
