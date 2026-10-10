@@ -1,5 +1,4 @@
 import { Clock, Plus, Star } from "lucide-react";
-import food_1 from "../assets/frontend_assets/food_1.png";
 
 interface dishCardProps {
     name: string;
