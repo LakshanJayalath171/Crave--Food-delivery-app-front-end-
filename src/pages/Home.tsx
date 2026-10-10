@@ -1,6 +1,6 @@
 import Navbar from "../components/Navbar"
-import { assets } from "../assets/frontend_assets/assets"
-import { ArrowRight, Flame ,FaceSlightlySmiling ,  UserRoundArrowLeft , FaceGrinning, Star} from "lucide-react"
+import { assets ,menu_list} from "../assets/frontend_assets/assets"
+import { ArrowRight, Flame ,FaceSlightlySmiling ,  UserRoundArrowLeft , FaceGrinning, Star, ChevronRight, ChevronLeft} from "lucide-react"
 
 const Home = () => {
   return (
@@ -70,6 +70,38 @@ const Home = () => {
               </div>
             </div>
           </div>
+        </div>
+      </div>
+
+      {/* category section */}
+      <div>
+
+        {/* category section's navigator */}
+        <div className="flex items-center justify-between mb-4">
+         <div>
+            <h1 className="text-2xl font-extrabold text-primary ">Explore by Category</h1>
+            <p className="text-main text-sm font-medium">Whatever you're craving, we've got something for you.</p>
+         </div>
+
+         <div className="flex items-center justify-center gap-2">
+          <button className="text-primary hover:text-primary-dark cursor-pointer"><ChevronLeft/></button>
+          <button className="text-primary hover:text-primary-dark cursor-pointer"><ChevronRight/></button>
+         </div>
+        </div>
+
+        {/* category items */}
+
+        <div className="flex items-center justify-start gap-10 overflow-x-auto scrollbar-hide">
+
+          {menu_list.map((item, index) => (<a href="#" className="category-item">
+            <div key={index}>
+              <img src={item.menu_image}  className="w-24 h-24 object-cover rounded-full"/>
+              <div className="flex items-center justify-center mt-2">
+                <p className="text-sm font-bold text-main">{item.menu_name}</p>
+              </div>
+            </div>
+          </a>))}
+          
         </div>
       </div>
     </div>
