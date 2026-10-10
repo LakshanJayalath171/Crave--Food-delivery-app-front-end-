@@ -5,7 +5,7 @@ const Navbar = () => {
     <nav className="flex items-center justify-between py-2">
         {/* left */}
         <div>
-            <img src="/public/logo.svg" className="w-24 h-10"/>
+            <img src="/logo.svg" className="w-24 h-10"/>
         </div>
 
         {/* middle */}
