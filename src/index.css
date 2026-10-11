@@ -327,7 +327,7 @@ body {
     align-items: center;
     justify-content: center;
     gap: 0.5rem;
-    border: 1px solid transparent;
+    border: 1px solid var(--crave-primary);
     border-radius: 0.75rem;
     padding: 0.7rem 1rem;
     background: transparent;
