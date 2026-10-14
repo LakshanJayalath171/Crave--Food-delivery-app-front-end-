@@ -12,18 +12,20 @@ const Dashboard = () => {
   const [activeComponent, setActiveComponent] = useState('dashboard')
 
   return (
-    <div>
+    <div className='w-full h-screen overflow-hidden flex flex-col'>
         {/* Navbar */}
-        <Admin_nav/>
+        <div className='flex-none'>
+          <Admin_nav/>
+        </div>
 
-        <div className='flex gap-3'>
+        <div className='flex flex-1 min-h-0 gap-3'>
             {/* sidebar */}
             <div className='w-1/5'>
                 <Admin_sidebar activeCom={activeComponent} setAct={setActiveComponent}/>
             </div>
 
             {/* content */}
-            <div className='w-4/5 pr-10'>
+            <div className='w-4/5 min-h-0 overflow-y-auto pr-10'>
               {activeComponent === 'dashboard' && <Dashbord_com/>}
               {activeComponent === 'products' && <Products/>}
               {activeComponent === 'promotions' && <Promotions/>}
