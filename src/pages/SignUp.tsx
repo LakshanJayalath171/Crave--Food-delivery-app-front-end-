@@ -2,8 +2,11 @@ import Sign_nav from "../components/Sign_nav"
 import Login_img from "../assets/frontend_assets/login.jpg"
 import { ArrowRight, CalendarDays, ClipboardList, Lock, LockKeyhole, Mail, Shield, User, UtensilsCrossed } from "lucide-react";
 import BlinkingDot from "../components/Dot";
+import { useNavigate } from "react-router-dom";
 
 const SignUp = () => {
+
+  const navigate = useNavigate();
   return (
     <div>
       {/* navbar */}
@@ -107,7 +110,7 @@ const SignUp = () => {
                 <div className="mt-6 flex items-center justify-between">
                     <p className="text-xs">Already have an account?</p>
                     <div className="flex items-center justify-center gap-1 cursor-pointer text-primary hover:underline">
-                        <p className="text-xs ">Sign in</p>
+                        <p className="text-xs " >Sign in</p>
                         <ArrowRight size={15}/>
                     </div>
                 </div>
