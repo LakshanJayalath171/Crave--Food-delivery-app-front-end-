@@ -23,7 +23,7 @@ const Dashboard = () => {
             </div>
 
             {/* content */}
-            <div className='w-4/5'>
+            <div className='w-4/5 pr-10'>
               {activeComponent === 'dashboard' && <Dashbord_com/>}
               {activeComponent === 'products' && <Products/>}
               {activeComponent === 'promotions' && <Promotions/>}
