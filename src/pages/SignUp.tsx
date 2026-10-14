@@ -7,6 +7,7 @@ import { useNavigate } from "react-router-dom";
 const SignUp = () => {
 
   const navigate = useNavigate();
+
   return (
     <div>
       {/* navbar */}
@@ -110,7 +111,7 @@ const SignUp = () => {
                 <div className="mt-6 flex items-center justify-between">
                     <p className="text-xs">Already have an account?</p>
                     <div className="flex items-center justify-center gap-1 cursor-pointer text-primary hover:underline">
-                        <p className="text-xs " >Sign in</p>
+                        <p className="text-xs " onClick={()=>navigate('/login')}>Sign in</p>
                         <ArrowRight size={15}/>
                     </div>
                 </div>

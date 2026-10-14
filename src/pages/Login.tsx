@@ -1,6 +1,6 @@
 import Sign_nav from "../components/Sign_nav"
 import sign_up from "../assets/frontend_assets/sign up.jpg"
-import { ArrowRight, CalendarDays, ClipboardList, Lock, LockKeyhole, Mail, Shield, User, UtensilsCrossed } from "lucide-react";
+import { ArrowRight, CalendarDays, ClipboardList, LockKeyhole, Mail, Shield, UtensilsCrossed } from "lucide-react";
 import BlinkingDot from "../components/Dot";
 import { useNavigate } from "react-router-dom";
 

@@ -1,5 +1,5 @@
 import { FileQuestion } from "lucide-react"
-import logo from "/public/logo.svg"
+import logo from "/logo.svg"
 
 const Sign_nav = () => {
   return (
