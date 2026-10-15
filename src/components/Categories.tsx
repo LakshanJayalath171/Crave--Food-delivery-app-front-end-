@@ -2,6 +2,7 @@ import { useState } from "react"
 import { CircleCheck, Eye, Folder, Plus } from "lucide-react"
 import { food_list, menu_list } from "../assets/frontend_assets/assets"
 import Category_card from "./Category_card"
+import Input_category from "./Input_category"
 
 const Categories = () => {
   const [categories, setCategories] = useState(menu_list)
@@ -28,8 +29,18 @@ const Categories = () => {
     })
   }
 
+  const [pannel,setPannel] = useState(false)
+
   return (
     <div>
+      {pannel && 
+            <div className="fixed top-0 left-0 z-50 flex h-screen w-screen bg-black/40 ">
+              <div className="flex-5" onClick={()=>setPannel(false)}></div>
+              <div className="flex-2 w-full h-screen bg-white">
+                <Input_category/>
+              </div>
+              
+            </div>}
       {/* heading */}
       <div className="flex items-center justify-between">
         <div>
@@ -45,7 +56,7 @@ const Categories = () => {
           </p>
         </div>
         <div>
-          <button className="btn-primary">
+          <button onClick={()=>setPannel(!pannel)} className="btn-primary">
             <Plus />
             Add Category
           </button>
