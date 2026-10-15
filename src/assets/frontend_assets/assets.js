@@ -60,6 +60,7 @@ import bag_icon from './bag_icon.png'
 import logout_icon from './logout_icon.png'
 import parcel_icon from './parcel_icon.png'
 
+
 export const assets = {
     logo,
     basket_icon,
@@ -346,5 +347,132 @@ export const food_list = [
         price: 15,
         description: "Food provides essential nutrients for overall health and well-being",
         category: "Noodles"
+    }
+]
+
+export const orders_list = [
+    {
+        id: "1",
+        status: "Pending",
+        customer_name: "John Doe",
+        order_date: "2023-07-15",
+        time: "12:30 PM",
+        items:[
+            {
+                item_id: "1",
+                name: "Greek salad",
+                quantity: 2,
+            },
+            {
+                item_id: "5",
+                name: "Lasagna Rolls",
+                quantity: 1,
+            }
+        ],
+        address:"123 Main St, Cityville",
+        total_amount: 36
+    },
+    {
+        id: "2",
+        status: "Confirmed",
+        customer_name: "Sarah Williams",
+        order_date: "2023-07-15",
+        time: "12:45 PM",
+        items: [
+            { item_id: "13", name: "Chicken Sandwich", quantity: 1 },
+            { item_id: "30", name: "Veg Noodles", quantity: 2 }
+        ],
+        address: "45 Park Avenue, Cityville",
+        total_amount: 36
+    },
+    {
+        id: "3",
+        status: "Preparing",
+        customer_name: "Michael Brown",
+        order_date: "2023-07-15",
+        time: "1:05 PM",
+        items: [
+            { item_id: "28", name: "Chicken Pasta", quantity: 1 },
+            { item_id: "21", name: "Garlic Mushroom", quantity: 1 }
+        ],
+        address: "18 Lake Road, Cityville",
+        total_amount: 38
+    },
+    {
+        id: "4",
+        status: "Out for Delivery",
+        customer_name: "Emily Davis",
+        order_date: "2023-07-15",
+        time: "1:20 PM",
+        items: [
+            { item_id: "7", name: "Chicken Rolls", quantity: 2 },
+            { item_id: "10", name: "Fruit Ice Cream", quantity: 1 }
+        ],
+        address: "72 Hill Street, Cityville",
+        total_amount: 54
+    },
+    {
+        id: "5",
+        status: "Delivered",
+        customer_name: "Daniel Wilson",
+        order_date: "2023-07-15",
+        time: "1:40 PM",
+        items: [
+            { item_id: "4", name: "Chicken Salad", quantity: 1 },
+            { item_id: "25", name: "Cheese Pasta", quantity: 1 }
+        ],
+        address: "9 Garden Lane, Cityville",
+        total_amount: 36
+    },
+    {
+        id: "6",
+        status: "Cancelled",
+        customer_name: "Olivia Martinez",
+        order_date: "2023-07-15",
+        time: "2:00 PM",
+        items: [
+            { item_id: "16", name: "Bread Sandwich", quantity: 2 }
+        ],
+        address: "33 Riverside Drive, Cityville",
+        total_amount: 48
+    },
+    {
+        id: "7",
+        status: "Pending",
+        customer_name: "James Anderson",
+        order_date: "2023-07-15",
+        time: "2:15 PM",
+        items: [
+            { item_id: "22", name: "Fried Cauliflower", quantity: 1 },
+            { item_id: "26", name: "Tomato Pasta", quantity: 1 }
+        ],
+        address: "101 Market Street, Cityville",
+        total_amount: 40
+    },
+    {
+        id: "8",
+        status: "Confirmed",
+        customer_name: "Sophia Taylor",
+        order_date: "2023-07-15",
+        time: "2:35 PM",
+        items: [
+            { item_id: "18", name: "Vegan Cake", quantity: 1 },
+            { item_id: "31", name: "Somen Noodles", quantity: 1 }
+        ],
+        address: "56 Temple Road, Cityville",
+        total_amount: 32
+    },
+    {
+        id: "9",
+        status: "Delivered",
+        customer_name: "Noah Thomas",
+        order_date: "2023-07-15",
+        time: "2:50 PM",
+        items: [
+            { item_id: "6", name: "Peri Peri Rolls", quantity: 1 },
+            { item_id: "12", name: "Vanilla Ice Cream", quantity: 2 }
+        ],
+        address: "27 Station Road, Cityville",
+        total_amount: 36
     }
 ]

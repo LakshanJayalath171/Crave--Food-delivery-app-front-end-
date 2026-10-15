@@ -110,9 +110,9 @@ const Categories = () => {
       </div>
 
       <div className="flex items-center justify-start mt-4">
-        <div className=" px-3 py-1 rounded-full text-xs font-semibold text-on-dark bg-orange-500">All(12)</div>
+        <div className=" px-3 py-1 cursor-pointer rounded-full text-xs font-semibold text-on-dark bg-orange-500">All(12)</div>
 
-        <div className=" px-3 py-1 rounded-full text-xs font-semibold text-main">Active(10)</div>
+        <div className=" px-3 py-1 cursor-pointer rounded-full text-xs font-semibold text-main">Active(10)</div>
 
         <div className=" px-3 py-1 rounded-full text-xs font-semibold text-main">Inactive(2)</div>
 
