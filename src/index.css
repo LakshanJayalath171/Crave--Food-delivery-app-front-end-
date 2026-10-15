@@ -210,6 +210,10 @@ body {
   }
 
   /* 6. Border classes */
+  .border-primary {
+    border: 1px solid var(--crave-primary);
+  }
+
   .border-special {
     border: 1px solid var(--crave-primary);
   }

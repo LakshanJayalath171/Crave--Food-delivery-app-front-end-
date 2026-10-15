@@ -208,12 +208,12 @@ const Orders = () => {
 
               {/* conttrols */}
               <div className="flex items-center justify-center gap-2 mt-4">
-                <button className="btn-primary">
-                  <Check />
+                <button className="px-4 py-2 rounded-full flex items-center justify-center gap-1 bg-green-500 text-on-dark font-bold cursor-pointer">
+                  {/* <Check /> */}
                   Accept Order
                 </button>
-                <button className="btn-secondary">
-                  <X />
+                <button className="px-4 py-2 rounded-full flex items-center justify-center gap-1 bg-red-500 text-on-dark font-bold cursor-pointer">
+                  
                   Decline Order
                 </button>
               </div>

@@ -1,6 +1,7 @@
 import { useState } from "react"
 import { CircleCheck, CirclePause, Edit3, Flame, Trash2, UtensilsCrossed } from "lucide-react"
 import { food_list } from "../assets/frontend_assets/assets"
+import Input_product from "./Input_product"
 
 const Products = () => {
   const [dishes, setDishes] = useState(food_list)
@@ -33,8 +34,19 @@ const Products = () => {
     })
   }
 
+  const [addMenu,setAddMenu] = useState(false)
+
   return (
     <div>
+      
+      {addMenu && 
+      <div className="fixed top-0 left-0 z-50 flex h-screen w-screen bg-black/40 ">
+        <div className="flex-5" onClick={()=>setAddMenu(false)}></div>
+        <div className="flex-2 w-full h-screen bg-white">
+          <Input_product/>
+        </div>
+        
+      </div>}
       {/* heading */}
       <div className="flex items-center justify-between">
         <div>
@@ -43,7 +55,7 @@ const Products = () => {
         </div>
 
         <div>
-          <button className="flex items-center justify-start btn-primary gap-2"><UtensilsCrossed/>+ Add New Product</button>
+          <button onClick={()=>setAddMenu(!addMenu)} className="flex items-center justify-start btn-primary gap-2"><UtensilsCrossed/>+ Add New Product</button>
         </div>
       </div>
 
