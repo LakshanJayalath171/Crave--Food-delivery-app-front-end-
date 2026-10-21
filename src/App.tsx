@@ -7,10 +7,16 @@ import Profile from "./pages/Profile"
 import SignUp from "./pages/SignUp"
 import Login from "./pages/Login"
 import Dashboard from "./pages/Dashboard"
+import { ToastContainer } from "react-toastify"
+import { useAuthStore } from "./store/authStore"
 
 const App = () => {
+
+  useAuthStore.getState().initializeAuth()
+  
   return (
     <div >
+      <ToastContainer/>
       <Routes>
         <Route path="/" element={<Home/>} />
         <Route path="/explore" element={<Explore/>} />

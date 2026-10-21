@@ -13,8 +13,28 @@ import {
 } from "lucide-react";
 import DishCard from "../components/DishCard";
 import Footer from "../components/Footer";
+import { useEffect, useState } from "react";
+import axiosInstance from "../api/axiosInstance";
 
 const Home = () => {
+  const [category, setCategory] = useState([]);
+
+  const allCategories = async()=>{
+    try{
+      const response = await axiosInstance.get("/user/categories");
+
+      setCategory(response.data.data)
+    }
+    catch(err){
+      console.log(err)
+    }
+  }
+
+  useEffect(()=>{
+    allCategories()
+  },[])
+
+  
   return (
     <div>
       {/* navbar */}
@@ -130,16 +150,16 @@ const Home = () => {
           {/* category items */}
 
           <div className="flex items-center justify-start gap-10 overflow-x-auto scrollbar-hide">
-            {menu_list.map((item, index) => (
+            {category.map((item, index) => (
               <a href="#" className="category-item">
                 <div key={index}>
                   <img
-                    src={item.menu_image}
+                    src={item?.image_url}
                     className="w-24 h-24 object-cover rounded-full"
                   />
                   <div className="flex items-center justify-center mt-2">
                     <p className="text-sm font-bold text-main">
-                      {item.menu_name}
+                      {item?.name}
                     </p>
                   </div>
                 </div>

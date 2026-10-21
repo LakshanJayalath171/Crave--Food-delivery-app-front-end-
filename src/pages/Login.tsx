@@ -3,11 +3,37 @@ import sign_up from "../assets/frontend_assets/sign up.jpg"
 import { ArrowRight, CalendarDays, ClipboardList, LockKeyhole, Mail, Shield, UtensilsCrossed } from "lucide-react";
 import BlinkingDot from "../components/Dot";
 import { useNavigate } from "react-router-dom";
+import { useState } from "react";
+import axiosInstance from "../api/axiosInstance";
+import { toast } from "react-toastify";
+import {useAuthStore} from "../store/authStore"
 
 const Login = () => {
 
-    const navigate = useNavigate();
-    
+  const [email, setEmail] = useState("");
+  const [password, setPassword] = useState("");
+
+  const navigate = useNavigate();
+
+  const loginHandler = async ()=>{
+    try{
+      const response = await axiosInstance.post("/auth/user/login", {email, password});
+
+      if(response.data.success){
+        localStorage.setItem("token", response.data.token)
+        axiosInstance.defaults.headers.common["Authorization"] = `Bearer ${response.data.token}`;
+        useAuthStore.setState({user: response.data.data, isAuthenticated: true})
+        toast.success("Login successful")
+        navigate("/")
+      }
+      else{
+        toast.error(response.data.message)
+      }
+    }
+    catch(err){
+      toast.error(err) 
+    }
+  }  
   return (
     <div>
       {/* navbar */}
@@ -71,7 +97,7 @@ Good mood.</h1>
                     <p className="text-main font-bold">Email Address</p>
                     <div className="flex items-center justify-start gap-1 w-full border-special px-3 py-2 rounded-lg">
                         <Mail size={15}/>
-                        <input type="email" placeholder="Enter your email address" className="border-none outline-none focus-visible:outline-none text-sm"/>
+                        <input onChange={(e)=>setEmail(e.target.value)} type="email" placeholder="Enter your email address" className="border-none outline-none focus-visible:outline-none text-sm"/>
                     </div>
                 </div>
 
@@ -79,12 +105,12 @@ Good mood.</h1>
                     <p className="text-main font-bold">Password</p>
                     <div className="flex items-center justify-start gap-1 w-full border-special px-3 py-2 rounded-lg">
                         <LockKeyhole size={15}/>
-                        <input type="password" placeholder="Enter your password" className="border-none outline-none focus-visible:outline-none text-sm"/>
+                        <input onChange={(e)=>setPassword(e.target.value)} type="password" placeholder="Enter your password" className="border-none outline-none focus-visible:outline-none text-sm"/>
                     </div>
                 </div>
                 <div className="flex items-center justify-center mt-3 w-full h-full">
                     <div className="w-full h-full">
-                        <button className="btn-primary flex items-center justify-center w-full h-full">Sign In <UtensilsCrossed size={20}/></button>
+                        <button onClick={loginHandler} className="btn-primary flex items-center justify-center w-full h-full">Sign In <UtensilsCrossed size={20}/></button>
                     </div>
                 </div>
 

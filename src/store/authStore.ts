@@ -1,4 +1,5 @@
 import {create} from 'zustand'
+import axiosInstance from '../api/axiosInstance';
 
 // define the user type
 interface User {
@@ -19,6 +20,7 @@ interface AuthState {
     isLoading:boolean,
     setUser :(user:User | null)=>void;
     setLoading :(isLoading:boolean)=>void;
+    initializeAuth:()=>void;
     logout:()=>void;
 }
 
@@ -33,5 +35,29 @@ export const useAuthStore = create<AuthState>((set) => ({
     // actions
     setUser: (user) => set({ user }),
     setLoading: (isLoading) => set({ isLoading }),
-    logout: () => set({ user: null, isAuthenticated: false }),
+
+    // initialize auth
+    initializeAuth: () => {
+        const token = localStorage.getItem("token");
+        if(!token){
+            set({ user: null, isAuthenticated: false ,isLoading: false});
+            delete axiosInstance.defaults.headers.common["Authorization"];
+        }
+
+        axiosInstance.defaults.headers.common["Authorization"] = `Bearer ${token}`;
+
+        try{
+            const response = await axiosInstance.get("/auth/user/me");
+            set({ user: response.data.data, isAuthenticated: true ,isLoading: false});
+        }
+        catch(err){}
+    },
+
+    // logout
+    logout: () => {
+        localStorage.removeItem("token");
+        delete axiosInstance.defaults.headers.common["Authorization"];
+        set({ user: null, isAuthenticated: false });
+        
+    }
 }))

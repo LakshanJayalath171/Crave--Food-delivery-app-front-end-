@@ -1,6 +1,12 @@
 import { Bell, MapPin, Search } from "lucide-react"
+import {useAuthStore} from "../store/authStore"
+import { useNavigate } from "react-router-dom"
 
 const Navbar = () => {
+    const {user, isAuthenticated , logout} = useAuthStore()
+    const navigate = useNavigate()
+
+    console.log(user, isAuthenticated)
   return (
     <nav className="flex items-center justify-between py-2 px-10">
         {/* left */}
@@ -33,14 +39,15 @@ const Navbar = () => {
             </div>
 
             <div>
-                <button className="btn-primary">Get Started</button>
+                <button onClick={() => navigate("/login")} className="btn-primary">Get Started</button>
             </div>
 
-            <div className=" flex items-center justify-center">
-                <div className="p-4 rounded-full bg-deep-orange  ">
-                    <p className="text-white text-xs font-bold">A</p>
+            {isAuthenticated && (<div onClick={() => logout()} className=" flex items-center justify-center bg-deep-orange cursor-pointer w-8 h-8 rounded-full p-4">
+                <div className="rounded-full flex items-center justify-center">
+                    <p className="text-white text-xs font-bold">c</p>
                 </div>
-            </div>
+            </div>)}
+            
         </div>
     </nav>
   )
