@@ -46,11 +46,6 @@ export const useAuthStore = create<AuthState>((set) => ({
 
         axiosInstance.defaults.headers.common["Authorization"] = `Bearer ${token}`;
 
-        try{
-            const response = await axiosInstance.get("/auth/user/me");
-            set({ user: response.data.data, isAuthenticated: true ,isLoading: false});
-        }
-        catch(err){}
     },
 
     // logout
