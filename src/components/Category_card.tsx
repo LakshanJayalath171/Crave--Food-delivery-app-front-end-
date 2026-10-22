@@ -25,6 +25,13 @@ const Category_card = ({
 }: CategoryCardProps) => {
 
   const handleDelete = async () => {
+
+    const confirmDelete = window.confirm(`Are you sure you want to delete the category "${category?.menu_name}"? This action cannot be undone.`)
+
+    if (!confirmDelete) {
+      return
+    }
+
     try{
       const response = await axiosInstance.delete(`admin/delete-category/${category?._id}`)
 
@@ -40,7 +47,7 @@ const Category_card = ({
   }
   return (
     <article className="overflow-hidden rounded-lg bg-white shadow-sm">
-      <div className="relative h-28 overflow-hidden bg-orange-50">
+      <div className="relative h-36 overflow-hidden bg-orange-50">
         {category?.image_url ? (
           <img src={category?.image_url} alt={category?.name} className="h-full w-full object-cover" />
         ) : (

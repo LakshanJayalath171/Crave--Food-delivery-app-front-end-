@@ -570,6 +570,32 @@ body {
   }
 }
 
+/* Horizontal category cards stay touch-friendly while keeping the page compact. */
+.category-slider {
+  scrollbar-width: none;
+  -ms-overflow-style: none;
+}
+
+.category-slider::-webkit-scrollbar {
+  display: none;
+}
+
+.category-slide {
+  width: min(78vw, 17rem);
+}
+
+@media (min-width: 640px) {
+  .category-slide {
+    width: calc((100% - 2rem) / 3);
+  }
+}
+
+@media (min-width: 1024px) {
+  .category-slide {
+    width: calc((100% - 3rem) / 4);
+  }
+}
+
 /* apple glass effect */
 
 @layer utilities {

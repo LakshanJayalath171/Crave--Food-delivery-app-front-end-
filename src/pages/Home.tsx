@@ -13,11 +13,47 @@ import {
 } from "lucide-react";
 import DishCard from "../components/DishCard";
 import Footer from "../components/Footer";
-import { useEffect, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import axiosInstance from "../api/axiosInstance";
 
+type HomeCategory = {
+  _id?: string;
+  name: string;
+  image_url?: string;
+  availability?: boolean;
+};
+
 const Home = () => {
-  const [category, setCategory] = useState([]);
+  const [category, setCategory] = useState<HomeCategory[]>([]);
+  const categorySliderRef = useRef<HTMLDivElement>(null);
+  const [canScrollPrevious, setCanScrollPrevious] = useState(false);
+  const [canScrollNext, setCanScrollNext] = useState(true);
+
+  const updateSliderControls = () => {
+    const slider = categorySliderRef.current;
+
+    if (!slider) {
+      return;
+    }
+
+    setCanScrollPrevious(slider.scrollLeft > 0);
+    setCanScrollNext(
+      Math.ceil(slider.scrollLeft + slider.clientWidth) < slider.scrollWidth,
+    );
+  };
+
+  const scrollCategories = (direction: "previous" | "next") => {
+    const slider = categorySliderRef.current;
+
+    if (!slider) {
+      return;
+    }
+
+    slider.scrollBy({
+      left: direction === "next" ? slider.clientWidth * 0.82 : -slider.clientWidth * 0.82,
+      behavior: "smooth",
+    });
+  };
 
   const allCategories = async()=>{
     try{
@@ -31,8 +67,29 @@ const Home = () => {
   }
 
   useEffect(()=>{
-    allCategories()
+    const timeoutId = window.setTimeout(() => {
+      void allCategories();
+    }, 0);
+
+    return () => window.clearTimeout(timeoutId);
   },[])
+
+  useEffect(() => {
+    const frameId = window.requestAnimationFrame(updateSliderControls);
+    window.addEventListener("resize", updateSliderControls);
+
+    return () => {
+      window.cancelAnimationFrame(frameId);
+      window.removeEventListener("resize", updateSliderControls);
+    };
+  }, [category]);
+
+  const displayedCategories: HomeCategory[] = category.length
+    ? category
+    : menu_list.map((item) => ({
+        name: item.menu_name,
+        image_url: item.menu_image,
+      }));
 
   
   return (
@@ -138,33 +195,68 @@ const Home = () => {
             </div>
 
             <div className="flex items-center justify-center gap-2">
-              <button className="text-primary hover:text-primary-dark cursor-pointer">
+              <button
+                type="button"
+                aria-label="Previous categories"
+                disabled={!canScrollPrevious}
+                onClick={() => scrollCategories("previous")}
+                className="flex h-10 w-10 items-center justify-center rounded-full border border-orange-100 bg-white text-primary shadow-sm transition hover:border-primary hover:bg-soft-orange disabled:cursor-not-allowed disabled:opacity-35"
+              >
                 <ChevronLeft />
               </button>
-              <button className="text-primary hover:text-primary-dark cursor-pointer">
+              <button
+                type="button"
+                aria-label="Next categories"
+                disabled={!canScrollNext}
+                onClick={() => scrollCategories("next")}
+                className="flex h-10 w-10 items-center justify-center rounded-full border border-orange-100 bg-white text-primary shadow-sm transition hover:border-primary hover:bg-soft-orange disabled:cursor-not-allowed disabled:opacity-35"
+              >
                 <ChevronRight />
               </button>
             </div>
           </div>
 
           {/* category items */}
+          <div
+            ref={categorySliderRef}
+            onScroll={updateSliderControls}
+            className="category-slider flex snap-x snap-mandatory gap-4 overflow-x-auto pb-4"
+            aria-label="Food categories"
+          >
+            {displayedCategories.map((item) => {
+              const itemName = item.name;
+              const itemCount = food_list.filter(
+                (dish) => dish.category === itemName,
+              ).length;
 
-          <div className="flex items-center justify-start gap-10 overflow-x-auto scrollbar-hide">
-            {category.map((item, index) => (
-              <a href="#" className="category-item">
-                <div key={index}>
+              return (
+                <a
+                  href={`#${itemName.toLowerCase().replace(/\s+/g, "-")}`}
+                  key={item._id ?? itemName}
+                  className="category-slide group relative h-48 shrink-0 snap-start overflow-hidden rounded-2xl bg-dark shadow-sm transition duration-300 hover:-translate-y-1 hover:shadow-xl"
+                >
                   <img
-                    src={item?.image_url}
-                    className="w-24 h-24 object-cover rounded-full"
+                    src={item.image_url}
+                    alt={itemName}
+                    className="h-full w-full object-cover transition duration-500 group-hover:scale-110"
                   />
-                  <div className="flex items-center justify-center mt-2">
-                    <p className="text-sm font-bold text-main">
-                      {item?.name}
-                    </p>
+                  <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-black/10 to-transparent" />
+                  <div className="absolute inset-x-0 bottom-0 p-4 text-white">
+                    <div className="flex items-end justify-between gap-3">
+                      <div>
+                        <p className="text-lg font-bold">{itemName}</p>
+                        <p className="mt-1 text-xs text-white/75">
+                          {itemCount} {itemCount === 1 ? "dish" : "dishes"}
+                        </p>
+                      </div>
+                      <span className="flex h-9 w-9 items-center justify-center rounded-full bg-white/20 backdrop-blur-sm transition group-hover:bg-primary">
+                        <ArrowRight size={16} />
+                      </span>
+                    </div>
                   </div>
-                </div>
-              </a>
-            ))}
+                </a>
+              );
+            })}
           </div>
 
           {/* popular items */}
@@ -181,12 +273,13 @@ const Home = () => {
             </div>
 
             <div className="mt-4 grid grid-cols-4 gap-3">
-              {food_list.slice(0, 4).map((items, index) => (
+              {food_list.slice(0, 4).map((items) => (
                 <DishCard
+                  key={items._id}
                   name={items.name}
                   image={items.image}
                   description={items.description}
-                  price={items.price}
+                  price={String(items.price)}
                 />
               ))}
             </div>
