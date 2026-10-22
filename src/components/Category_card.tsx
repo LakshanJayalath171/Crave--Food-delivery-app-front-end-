@@ -1,5 +1,6 @@
 import { Edit3, Trash2 } from "lucide-react"
-
+import { toast } from "react-toastify"
+import axiosInstance from "../api/axiosInstance"
 export type Category = {
   menu_name: string
   menu_image: string
@@ -22,6 +23,21 @@ const Category_card = ({
   onDelete,
   onToggleAvailability,
 }: CategoryCardProps) => {
+
+  const handleDelete = async () => {
+    try{
+      const response = await axiosInstance.delete(`admin/delete-category/${category?._id}`)
+
+      if(response.success ==false){
+        toast.error(response.message)
+        return
+      }
+      toast.success("Category deleted successfully")
+    }
+    catch (error) {
+      toast.error(error)
+    }
+  }
   return (
     <article className="overflow-hidden rounded-lg bg-white shadow-sm">
       <div className="relative h-28 overflow-hidden bg-orange-50">
@@ -61,7 +77,7 @@ const Category_card = ({
             <button type="button" onClick={onEdit} aria-label={`Edit ${category.menu_name}`} title={`Edit ${category.menu_name}`} className="rounded-md p-2 text-secondary transition-colors hover:bg-orange-100 hover:text-orange-600">
               <Edit3 size={16} />
             </button>
-            <button type="button" onClick={onDelete} aria-label={`Delete ${category.menu_name}`} title={`Delete ${category.menu_name}`} className="rounded-md p-2 text-secondary transition-colors hover:bg-red-100 hover:text-red-600">
+            <button type="button" onClick={handleDelete} aria-label={`Delete ${category.menu_name}`} title={`Delete ${category.menu_name}`} className="rounded-md p-2 text-secondary transition-colors hover:bg-red-100 hover:text-red-600">
               <Trash2 size={16} />
             </button>
           </div>
