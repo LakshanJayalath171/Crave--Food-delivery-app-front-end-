@@ -1,11 +1,31 @@
 import { Check, Clock, Locate, MapPin, MessageCircle, MessageCircleQuestionMark, PaperBag, Phone, RefreshCw, Timer, X } from "lucide-react";
 import { food_list, orders_list } from "../assets/frontend_assets/assets";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import BlinkingDot from "./Dot";
+import axiosInstance from "../api/axiosInstance";
 
 const Orders = () => {
 
-  const [orders, setOrders] = useState(orders_list);
+  
+
+  const [selectedOrder, setSelectedOrder] = useState(null);
+  const [orders, setOrders] = useState([]);
+
+  const getAllOrders = async() =>{
+    try{
+      const response = await axiosInstance.get('admin/all-orders');
+
+      setOrders(response.data.orders);
+    }
+    catch(error){
+      console.error(error);
+    }
+  }
+
+  useEffect(()=>{
+    getAllOrders();
+  },[])
+  
   return (
     <div>
       {/* heading */}
@@ -84,7 +104,7 @@ const Orders = () => {
       </div>
 
       {/* orders section */}
-      <div className="mt-4">
+      <div className="mt-10">
         <h2 className="text-lg font-bold text-main">Today Orders</h2>
         <div className="flex items-center justify-between gap-2 mt-2">
           <div className="flex items-center justify-start gap-2 ml-2">
@@ -120,7 +140,7 @@ const Orders = () => {
         </div>
 
         {/* content */}
-        <div className="flex gap-3">
+        <div className="flex gap-6 mt-4">
           {/* order items table */}
           <div className="flex-2 overflow-hidden rounded-lg bg-white shadow-sm">
             <div className="overflow-x-auto">
@@ -133,45 +153,45 @@ const Orders = () => {
                   </tr>
                 </thead>
                 <tbody className="divide-y divide-orange-100">
-                  {orders_list.map((order) => (
+                  {orders.map((order) => (
                     <tr
-                      key={order.id}
+                      key={order?._id}
                       className="hover:bg-orange-500/40 cursor-pointer transition-colors "
-                      onClick={() => setOrders([order])}
+                      onClick={() => setSelectedOrder(order)}
                     >
                       <td className="px-4 py-4 align-top">
-                        <p className="font-bold text-main">#{order.id}</p>
+                        <p className="font-bold text-main">#{order?._id}</p>
                         <p className="mt-1 text-xs text-secondary">
-                          {order.order_date} at {order.time}
+                          {order?.createdAt} at 
                         </p>
                         <span className="mt-2 inline-flex rounded-full bg-orange-100 px-2.5 py-1 text-xs font-semibold text-orange-700">
-                          {order.status}
+                          {order?.status}
                         </span>
                       </td>
                       <td className="px-4 py-4 align-top">
                         <p className="font-semibold text-main">
-                          {order.customer_name}
+                          {order?.user_name}
                         </p>
                         <p className="mt-1 max-w-56 text-xs text-secondary">
-                          {order.address}
+                          {order?.address.lane1}, {order?.address.city}
                         </p>
                       </td>
                       <td className="px-4 py-4 align-top">
                         <ul className="space-y-1 text-secondary">
                           {order.items.map((item) => (
                             <li
-                              key={item.item_id}
+                              key={item?.product_id}
                               className="flex items-center justify-between gap-6"
                             >
-                              <span>{item.name}</span>
+                              <span>{item?.product_name}</span>
                               <span className="font-semibold text-main">
-                                x{item.quantity}
+                                x{item?.quantity}
                               </span>
                             </li>
                           ))}
                         </ul>
                         <p className="mt-2 text-sm font-bold text-main">
-                          LKR {order.total_amount.toLocaleString()}
+                          hello world
                         </p>
                       </td>
                     </tr>
@@ -189,24 +209,24 @@ const Orders = () => {
               <div className="flex items-center justify-between mt-3">
                 <div>
                   <h1 className="text-secondary font-bold text-xs">
-                    Order Id: {orders[0]?.id}
+                    selected order id: {selectedOrder?._id}
                   </h1>
                   <div className="flex items-center justify-start gap-2">
                     <Clock className="text-secondary" size={15} />
                     <p className="text-xs">
-                      {orders[0]?.order_date} at {orders[0]?.time}
+                      hello world
                     </p>
                   </div>
                 </div>
                 <div className="flex items-center justify-start gap-2">
                   <BlinkingDot color="bg-green-500" size="w-2 h-2" />
                   <p className="text-sm font-bold text-main">
-                    {orders[0]?.status}
+                    {selectedOrder?.status}
                   </p>
                 </div>
               </div>
 
-              {/* conttrols */}
+              {/* controls */}
               <div className="flex items-center justify-center gap-2 mt-4">
                 <button className="px-4 py-2 rounded-full flex items-center justify-center gap-1 bg-green-500 text-on-dark font-bold cursor-pointer">
                   {/* <Check /> */}
@@ -228,9 +248,9 @@ const Orders = () => {
 
                       <div>
                         <p className="text-sm font-bold ">
-                          {orders[0]?.customer_name}
+                          {selectedOrder?.user_name}
                         </p>
-                        <p className="text-xs font-light">+94 77 123 4567</p>
+                        <p className="text-xs font-light">{selectedOrder?.phone_number}</p>
                       </div>
                     </div>
                     <div className="flex items-center justify-between gap-2">
@@ -247,7 +267,7 @@ const Orders = () => {
                 <div className="flex items-start justify-start mt-2 gap-3">
                   <MapPin className="text-primary" size={20} />
                   <div>
-                    <p className="font-bold text-main">{orders[0]?.address}</p>
+                    <p className="font-bold text-main">hello world</p>
                   </div>
                 </div>
 
@@ -269,34 +289,34 @@ const Orders = () => {
                 <div>
                   <div className="flex items-center justify-between mt-2">
                     <div className="flex items-center justify-start gap-2 mt-2">
-                      <img src={food_list[0]?.image} alt="Food" className="w-16 h-16 object-cover rounded-lg" />
+                      <img src={selectedOrder?.items[0]?.image} alt="Food" className="w-16 h-16 object-cover rounded-lg" />
                       <div className="flex items-center justify-start gap-2">
                         <div className="bg-orange-500 text-on-dark px-3 py-1 rounded-lg text-xs">
                           2X
                         </div>
                         <div>
                           <h1 className="text-xs font-bold">
-                            Classic Artisan Beef Burger
+                            {selectedOrder?.items[0]?.product_name}
                           </h1>
                         </div>
                       </div>
                     </div>
 
                     <div>
-                      <p className="text-main font-bold text-sm">Rs. 450.00</p>
+                      <p className="text-main font-bold text-sm">{selectedOrder?.items[0]?.product_price}</p>
                     </div>
                   </div>
 
                   <div className="flex items-center justify-between mt-2">
                     <div className="flex items-center justify-start gap-2 mt-2">
-                      <img src={food_list[1]?.image} alt="Food" className="w-16 h-16 object-cover rounded-lg" />
+                      <img src={selectedOrder?.items[1]?.image_url} alt="Food" className="w-16 h-16 object-cover rounded-lg" />
                       <div className="flex items-center justify-start gap-2">
                         <div className="bg-orange-500 text-on-dark px-3 py-1 rounded-lg text-xs">
-                          2X
+                          {selectedOrder?.items[1]?.quantity}X
                         </div>
                         <div>
                           <h1 className="text-xs font-bold">
-                            Classic Artisan Beef Burger
+                            {selectedOrder?.items[1]?.product_name}
                           </h1>
                         </div>
                       </div>
@@ -312,7 +332,7 @@ const Orders = () => {
                 <div className="mt-4 border-t border-orange-100 pt-2">
                   <div className="flex items-center justify-between">
                     <h1 className="font-bold text-xl">Total</h1>
-                    <p className="text-primary font-light text-sm">Rs. 900.00</p>
+                    <p className="text-primary font-light text-sm">{selectedOrder?.total}</p>
                   </div>
                 </div>
               </div>

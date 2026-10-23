@@ -1,4 +1,4 @@
-import {useState} from 'react'
+import {useEffect, useState} from 'react'
 import Admin_nav from '../components/Admin_nav'
 import Admin_sidebar from '../components/Admin_sidebar'
 import Dashbord_com from '../components/Dashbord_com'
@@ -6,8 +6,27 @@ import Products from '../components/Products'
 import Promotions from '../components/Promotions'
 import Categories from '../components/Categories'
 import Orders from '../components/Orders'
+import axiosInstance from '../api/axiosInstance'
+import useCategoryStore from '../store/categoryStore'
 
 const Dashboard = () => {
+
+  const categories = useCategoryStore((state) => state.categories);
+  const setCategories = useCategoryStore((state) => state.setCategories);
+
+  const getAllCategories = async () => {
+    try{
+      const response = await axiosInstance.get('admin/all-categories');
+      setCategories(response.data.categories);
+    }
+    catch(error){
+      console.error('Error fetching categories:', error);
+    }
+  }
+
+  useEffect(() => {
+    getAllCategories();
+  },[])
 
   const [activeComponent, setActiveComponent] = useState('dashboard')
 

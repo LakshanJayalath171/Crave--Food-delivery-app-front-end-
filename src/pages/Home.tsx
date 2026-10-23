@@ -200,7 +200,7 @@ const Home = () => {
                 aria-label="Previous categories"
                 disabled={!canScrollPrevious}
                 onClick={() => scrollCategories("previous")}
-                className="flex h-10 w-10 items-center justify-center rounded-full border border-orange-100 bg-white text-primary shadow-sm transition hover:border-primary hover:bg-soft-orange disabled:cursor-not-allowed disabled:opacity-35"
+                className="flex h-10 w-10 items-center justify-center rounded-full border border-orange-100 bg-white text-primary shadow-sm transition hover:border-primary hover:bg-soft-orange disabled:cursor-not-allowed disabled:opacity-35 cursor-pointer"
               >
                 <ChevronLeft />
               </button>
@@ -209,7 +209,7 @@ const Home = () => {
                 aria-label="Next categories"
                 disabled={!canScrollNext}
                 onClick={() => scrollCategories("next")}
-                className="flex h-10 w-10 items-center justify-center rounded-full border border-orange-100 bg-white text-primary shadow-sm transition hover:border-primary hover:bg-soft-orange disabled:cursor-not-allowed disabled:opacity-35"
+                className="flex h-10 w-10 items-center justify-center rounded-full border border-orange-100 bg-white text-primary shadow-sm transition hover:border-primary hover:bg-soft-orange disabled:cursor-not-allowed disabled:opacity-35 cursor-pointer"
               >
                 <ChevronRight />
               </button>
