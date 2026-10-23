@@ -43,7 +43,7 @@ const Products = () => {
       <div className="fixed top-0 left-0 z-50 flex h-screen w-screen bg-black/40 ">
         <div className="flex-5" onClick={()=>setAddMenu(false)}></div>
         <div className="flex-2 w-full h-screen bg-white">
-          <Input_product/>
+          <Input_product setAddMenu={setAddMenu}/>
         </div>
         
       </div>}
