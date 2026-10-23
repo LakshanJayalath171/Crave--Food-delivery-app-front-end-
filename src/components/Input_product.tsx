@@ -6,8 +6,10 @@ import axiosInstance from "../api/axiosInstance";
 
 const Input_product = ({
   setAddMenu,
+  refreshProductList,
 }: {
-  setAddMenu: (addMenu: boolean) => void;
+  setAddMenu: (addMenu: boolean ) => void;
+  refreshProductList: () => void;
 }) => {
   const [name, setName] = useState<string>("");
   const [description, setDescription] = useState<string>("");
@@ -54,6 +56,8 @@ const Input_product = ({
         }
 
         toast.success("Product added successfully")
+        refreshProductList();
+        setAddMenu(false)
     }
     catch(error){
         toast.error(error.message)
@@ -61,7 +65,7 @@ const Input_product = ({
     }
   }
   return (
-    <div className="px-3 py-2">
+    <div className="px-3 py-2 overflow-auto h-full">
       {/* headers */}
       <div className="flex items-center justify-start gap-3">
         <div className="p-2 rounded-lg bg-primary">

@@ -11,8 +11,10 @@ const DishCard = ({name,image,price,description}:dishCardProps) => {
   return (
         <div className="rounded-2xl card-hover">
         {/* image section */}
-        <div >
-            <img src={image} alt="Dish" className="w-full h-48 object-cover rounded-lg"/>
+        <div className="w-full h-48 rounded-t-2xl overflow-hidden flex items-center justify-center px-4 py-3">
+            <div>
+                <img src={image} alt="Dish" className="w-full h-36 object-cover rounded-lg"/>
+            </div>
         </div>
         {/* details section */}
         <div className="px-2 py-3">
