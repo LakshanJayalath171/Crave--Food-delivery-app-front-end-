@@ -9,10 +9,13 @@ import Login from "./pages/Login"
 import Dashboard from "./pages/Dashboard"
 import { ToastContainer } from "react-toastify"
 import { useAuthStore } from "./store/authStore"
+import { useEffect } from "react"
 
 const App = () => {
 
-  useAuthStore.getState().initializeAuth()
+  useEffect(() => {
+    useAuthStore.getState().initializeAuth()
+  },[])
   
   return (
     <div >

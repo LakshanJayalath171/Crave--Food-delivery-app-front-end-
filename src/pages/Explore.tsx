@@ -2,7 +2,6 @@ import { Filter, Star } from "lucide-react"
 import Navbar from "../components/Navbar"
 import { useEffect, useState } from "react";
 import DishCard from "../components/DishCard";
-import {  food_list } from "../assets/frontend_assets/assets";
 import axiosInstance from "../api/axiosInstance";
 
 const Explore = () => {
@@ -17,7 +16,7 @@ const Explore = () => {
 
       if(response.data.success){
         setProducts(response.data.products);
-        console.log(response.data.products);
+        
       }
     }
     catch(error){
@@ -29,6 +28,7 @@ const Explore = () => {
     getAllProducts();
   }, []);
 
+  
   return (
     <div className="w-screen h-screen">
       {/* navbar */}
@@ -191,7 +191,7 @@ const Explore = () => {
         <div className="w-3/4 flex items-start justify-start overflow-y-auto h-[70vh] gap-4 px-6 py-2">
           <div className="grid grid-cols-3 gap-4">
             {products?.map((items) => (
-              <DishCard key={items._id} name={items.name} image={items.image_url} description={items.description} price={`Rs. ${items.price}`}/>
+              <DishCard key={items._id} id={items._id} name={items.name} image={items.image_url} description={items.description} price={`Rs. ${items.price}`}/>
             ))}
           </div>
         </div>
