@@ -1,11 +1,58 @@
-import { Check, Clock, Locate, MapPin, MessageCircle, MessageCircleQuestionMark, PaperBag, Phone, RefreshCw, Timer, X } from "lucide-react";
-import { food_list, orders_list } from "../assets/frontend_assets/assets";
-import { useState } from "react";
+import {
+  Check,
+  CircleCheck,
+  Clock,
+  Locate,
+  MapPin,
+  MessageCircle,
+  MessageCircleQuestionMark,
+  PaperBag,
+  Phone,
+  RefreshCw,
+  Timer,
+  X,
+} from "lucide-react";
+import { useEffect, useState } from "react";
 import BlinkingDot from "./Dot";
+import axiosInstance from "../api/axiosInstance";
+import { toast } from "react-toastify";
 
 const Orders = () => {
+  const [selectedOrder, setSelectedOrder] = useState(null);
+  const [orders, setOrders] = useState([]);
 
-  const [orders, setOrders] = useState(orders_list);
+  const getAllOrders = async () => {
+    try {
+      const response = await axiosInstance.get("admin/all-orders");
+
+      setOrders(response.data.orders);
+    } catch (error) {
+      console.error(error);
+    }
+  };
+
+  const updateOrderStatus = async (orderId, newStatus) => {
+    try {
+      const response = await axiosInstance.put(
+        `/admin/change-order-status/${orderId}`,
+        { status: newStatus },
+      );
+
+      if (response.status === 200) {
+        toast.success(`order status updated to ${newStatus}`);
+      }
+      getAllOrders();
+    } catch (error) {
+      toast.error("Failed to update order status");
+      console.error(error);
+    }
+  };
+
+  useEffect(() => {
+    getAllOrders();
+  }, []);
+
+  console.log("selected order:", selectedOrder);
   return (
     <div>
       {/* heading */}
@@ -84,7 +131,7 @@ const Orders = () => {
       </div>
 
       {/* orders section */}
-      <div className="mt-4">
+      <div className="mt-10">
         <h2 className="text-lg font-bold text-main">Today Orders</h2>
         <div className="flex items-center justify-between gap-2 mt-2">
           <div className="flex items-center justify-start gap-2 ml-2">
@@ -97,7 +144,9 @@ const Orders = () => {
               Search
             </button>
 
-            <button ><RefreshCw size={20} className="cursor-pointer" /></button>
+            <button>
+              <RefreshCw size={20} className="cursor-pointer" />
+            </button>
           </div>
 
           <div className="flex items-center justify-end gap-2">
@@ -120,7 +169,7 @@ const Orders = () => {
         </div>
 
         {/* content */}
-        <div className="flex gap-3">
+        <div className="flex gap-6 mt-4">
           {/* order items table */}
           <div className="flex-2 overflow-hidden rounded-lg bg-white shadow-sm">
             <div className="overflow-x-auto">
@@ -133,46 +182,44 @@ const Orders = () => {
                   </tr>
                 </thead>
                 <tbody className="divide-y divide-orange-100">
-                  {orders_list.map((order) => (
+                  {orders.map((order) => (
                     <tr
-                      key={order.id}
+                      key={order?._id}
                       className="hover:bg-orange-500/40 cursor-pointer transition-colors "
-                      onClick={() => setOrders([order])}
+                      onClick={() => setSelectedOrder(order)}
                     >
                       <td className="px-4 py-4 align-top">
-                        <p className="font-bold text-main">#{order.id}</p>
+                        <p className="font-bold text-main">#{order?._id}</p>
                         <p className="mt-1 text-xs text-secondary">
-                          {order.order_date} at {order.time}
+                          {order?.createdAt.slice(0, 10)} at{" "}
+                          {order?.createdAt.slice(11, 16)}
                         </p>
                         <span className="mt-2 inline-flex rounded-full bg-orange-100 px-2.5 py-1 text-xs font-semibold text-orange-700">
-                          {order.status}
+                          {order?.status}
                         </span>
                       </td>
                       <td className="px-4 py-4 align-top">
                         <p className="font-semibold text-main">
-                          {order.customer_name}
+                          {order?.user_name}
                         </p>
                         <p className="mt-1 max-w-56 text-xs text-secondary">
-                          {order.address}
+                          {order?.address.lane1}, {order?.address.city}
                         </p>
                       </td>
                       <td className="px-4 py-4 align-top">
                         <ul className="space-y-1 text-secondary">
                           {order.items.map((item) => (
                             <li
-                              key={item.item_id}
+                              key={item?.product_id}
                               className="flex items-center justify-between gap-6"
                             >
-                              <span>{item.name}</span>
+                              <span>{item?.product_name}</span>
                               <span className="font-semibold text-main">
-                                x{item.quantity}
+                                x{item?.quantity}
                               </span>
                             </li>
                           ))}
                         </ul>
-                        <p className="mt-2 text-sm font-bold text-main">
-                          LKR {order.total_amount.toLocaleString()}
-                        </p>
                       </td>
                     </tr>
                   ))}
@@ -189,34 +236,103 @@ const Orders = () => {
               <div className="flex items-center justify-between mt-3">
                 <div>
                   <h1 className="text-secondary font-bold text-xs">
-                    Order Id: {orders[0]?.id}
+                    selected order id: {selectedOrder?._id}
                   </h1>
                   <div className="flex items-center justify-start gap-2">
                     <Clock className="text-secondary" size={15} />
                     <p className="text-xs">
-                      {orders[0]?.order_date} at {orders[0]?.time}
+                      {selectedOrder?.createdAt.slice(0, 10)} at{" "}
+                      {selectedOrder?.createdAt.slice(11, 16)}
                     </p>
                   </div>
                 </div>
                 <div className="flex items-center justify-start gap-2">
                   <BlinkingDot color="bg-green-500" size="w-2 h-2" />
                   <p className="text-sm font-bold text-main">
-                    {orders[0]?.status}
+                    {selectedOrder?.status}
                   </p>
                 </div>
               </div>
 
-              {/* conttrols */}
-              <div className="flex items-center justify-center gap-2 mt-4">
-                <button className="px-4 py-2 rounded-full flex items-center justify-center gap-1 bg-green-500 text-on-dark font-bold cursor-pointer">
-                  {/* <Check /> */}
-                  Accept Order
-                </button>
-                <button className="px-4 py-2 rounded-full flex items-center justify-center gap-1 bg-red-500 text-on-dark font-bold cursor-pointer">
-                  
-                  Decline Order
-                </button>
-              </div>
+              {/* controls */}
+              {selectedOrder?.status === "cancelled" ||
+              selectedOrder?.status === "completed" ? (
+                <div className="flex items-center justify-center py-10">
+                  <div>
+                    <div className="flex items-center justify-center">
+                      {selectedOrder?.status === "cancelled" && (<X size={50} className="text-red-500" />)}
+                      
+                      {selectedOrder?.status === "completed" && (<CircleCheck size={50} className="text-green-500" />)}
+                      
+                    </div>
+                    <div>
+                      <p className="text-sm font-bold text-main">
+                        Order {selectedOrder?.status}
+                      </p>
+                      <p className="text-xs text-secondary">
+                        Can't change status
+                      </p>
+                    </div>
+                  </div>
+                </div>
+              ) : (
+                <div className="flex items-center justify-center gap-2 mt-4">
+                  {selectedOrder?.status === "pending" && (
+                    <button
+                      onClick={() =>
+                        updateOrderStatus(selectedOrder?._id, "confirmed")
+                      }
+                      className="px-4 py-2 rounded-full flex items-center justify-center gap-1 bg-green-500 text-on-dark font-bold cursor-pointer"
+                    >
+                      {/* <Check /> */}
+                      Accept Order
+                    </button>
+                  )}
+
+                  {selectedOrder?.status === "confirmed" && (
+                    <button
+                      onClick={() =>
+                        updateOrderStatus(selectedOrder?._id, "preparing")
+                      }
+                      className="px-4 py-2 rounded-full flex items-center justify-center gap-1 bg-orange-500 text-on-dark font-bold cursor-pointer"
+                    >
+                      {/* <Check /> */}
+                      Prepare Order
+                    </button>
+                  )}
+
+                  {selectedOrder?.status === "preparing" && (
+                    <button
+                      onClick={() =>
+                        updateOrderStatus(
+                          selectedOrder?._id,
+                          "out-for-delivery",
+                        )
+                      }
+                      className="px-4 py-2 rounded-full flex items-center justify-center gap-1 bg-blue-500 text-on-dark font-bold cursor-pointer"
+                    >
+                      {/* <Check /> */}
+                      Out for Delivery
+                    </button>
+                  )}
+
+                  {selectedOrder?.status === "out-for-delivery" && (
+                    <button
+                      onClick={() =>
+                        updateOrderStatus(selectedOrder?._id, "completed")
+                      }
+                      className="px-4 py-2 rounded-full flex items-center justify-center gap-1 bg-green-500 text-on-dark font-bold cursor-pointer"
+                    >
+                      {/* <Check /> */}
+                      Completed
+                    </button>
+                  )}
+
+                  <button className="px-4 py-2 rounded-full flex items-center justify-center gap-1 bg-red-500 text-on-dark font-bold cursor-pointer">
+                    Decline Order
+                  </button>
+                </div>
+              )}
 
               <div>
                 <div className="flex items-center justify-between">
@@ -228,9 +344,11 @@ const Orders = () => {
 
                       <div>
                         <p className="text-sm font-bold ">
-                          {orders[0]?.customer_name}
+                          {selectedOrder?.user_name}
                         </p>
-                        <p className="text-xs font-light">+94 77 123 4567</p>
+                        <p className="text-xs font-light">
+                          {selectedOrder?.phone_number}
+                        </p>
                       </div>
                     </div>
                     <div className="flex items-center justify-between gap-2">
@@ -244,12 +362,22 @@ const Orders = () => {
                 </div>
 
                 {/* address */}
-                <div className="flex items-start justify-start mt-2 gap-3">
-                  <MapPin className="text-primary" size={20} />
-                  <div>
-                    <p className="font-bold text-main">{orders[0]?.address}</p>
+                {selectedOrder?.address.map((items, index) => (
+                  <div className="flex items-start justify-start mt-2 gap-3">
+                    <MapPin className="text-primary" size={20} />
+                    <div>
+                      <p className="font-bold text-main">
+                        {items.lane} {items.street}
+                      </p>
+                      <p className="text-xs font-light text-secondary">
+                        {items.city}
+                      </p>
+                      <p className="text-xs font-light text-secondary">
+                        Postal code: {items.postal_code}
+                      </p>
+                    </div>
                   </div>
-                </div>
+                ))}
 
                 {/* note */}
                 <div className="flex items-start justify-start mt-2 gap-3">
@@ -267,52 +395,44 @@ const Orders = () => {
 
                 {/* items */}
                 <div>
-                  <div className="flex items-center justify-between mt-2">
-                    <div className="flex items-center justify-start gap-2 mt-2">
-                      <img src={food_list[0]?.image} alt="Food" className="w-16 h-16 object-cover rounded-lg" />
-                      <div className="flex items-center justify-start gap-2">
-                        <div className="bg-orange-500 text-on-dark px-3 py-1 rounded-lg text-xs">
-                          2X
+                  {selectedOrder?.items.map((item, index) => (
+                    <div className="flex items-center justify-between mt-2">
+                      <div className="flex items-center justify-start gap-2 mt-2">
+                        <div className="flex items-center justify-center w-24 h-16 bg-orange-100 rounded-lg">
+                          <img
+                            src={item.image_url}
+                            alt={item.product_name}
+                            className="w-18 h-14 rounded-lg"
+                          />
                         </div>
-                        <div>
-                          <h1 className="text-xs font-bold">
-                            Classic Artisan Beef Burger
-                          </h1>
-                        </div>
-                      </div>
-                    </div>
-
-                    <div>
-                      <p className="text-main font-bold text-sm">Rs. 450.00</p>
-                    </div>
-                  </div>
-
-                  <div className="flex items-center justify-between mt-2">
-                    <div className="flex items-center justify-start gap-2 mt-2">
-                      <img src={food_list[1]?.image} alt="Food" className="w-16 h-16 object-cover rounded-lg" />
-                      <div className="flex items-center justify-start gap-2">
-                        <div className="bg-orange-500 text-on-dark px-3 py-1 rounded-lg text-xs">
-                          2X
-                        </div>
-                        <div>
-                          <h1 className="text-xs font-bold">
-                            Classic Artisan Beef Burger
-                          </h1>
+                        <div className="flex items-center justify-start gap-2">
+                          <div className="bg-orange-500 text-on-dark px-3 py-1 rounded-lg text-xs">
+                            {item.quantity}X
+                          </div>
+                          <div>
+                            <h1 className="text-xs font-bold">
+                              {item.product_name}
+                            </h1>
+                          </div>
                         </div>
                       </div>
-                    </div>
 
-                    <div>
-                      <p className="text-main font-bold text-sm">Rs. 450.00</p>
+                      <div>
+                        <p className="text-main font-bold text-sm">
+                          {item.product_price}
+                        </p>
+                      </div>
                     </div>
-                  </div>
+                  ))}
                 </div>
 
                 {/* total */}
                 <div className="mt-4 border-t border-orange-100 pt-2">
                   <div className="flex items-center justify-between">
                     <h1 className="font-bold text-xl">Total</h1>
-                    <p className="text-primary font-light text-sm">Rs. 900.00</p>
+                    <p className="text-primary font-bold text-lg">
+                      Rs. {selectedOrder?.total_price}.00
+                    </p>
                   </div>
                 </div>
               </div>

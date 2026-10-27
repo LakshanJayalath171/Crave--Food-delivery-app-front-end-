@@ -2,6 +2,8 @@ import Navbar from "../components/Navbar";
 import profileImage from "../assets/admin_assets/profile_image.png";
 import food_1 from "../assets/frontend_assets/food_1.png";
 import BlinkingDot from "../components/Dot";
+import { useAuthStore } from "../store/authStore";
+
 import {
   Bell,
   BuildingComplex,
@@ -17,17 +19,179 @@ import {
   Trash2,
   UserPen,
 } from "lucide-react";
-import { useState } from "react";
+
+import { useEffect, useState } from "react";
 import Footer from "../components/Footer";
+import axiosInstance from "../api/axiosInstance";
+import { toast } from "react-toastify";
 
 const Profile = () => {
   const [selectedTab, setSelectedTab] = useState("personalDetails");
+  const { user, isAuthenticated, logout } = useAuthStore();
+
+  // state variable to hold the selected tab
+
+  const [first_name, setFirstName] = useState<string>("");
+  const [last_name, setLastName] = useState<string>("");
+  const [email, setEmail] = useState<string>("");
+  const [phone_number, setPhoneNumber] = useState<string>("");
+  const [date_of_birth, setDateOfBirth] = useState<string>("");
+
+  // address input state
+  const [lane, setLane] = useState<string>("");
+  const [city, setCity] = useState<string>("");
+  const [street, setStreet] = useState<string>("");
+  const [country, setCountry] = useState<string>("");
+  const [postalCode, setPostalCode] = useState<string>("");
+
+  // state variable to control the visibility of the address input
+  const [inputAddress, setInputAddress] = useState<boolean>(false);
+
+  const updateProfile = async () => {
+    if (!user) {
+      toast.error("User is not authenticated.");
+      return;
+    }
+
+    const updatedData = {
+      first_name : first_name || user.first_name,
+      last_name : last_name || user.last_name,
+      email : email || user.email,
+      phone_number : phone_number || user.phone_number,
+      date_of_birth: date_of_birth || user.date_of_birth,
+
+      addresses: [
+        {
+          lane : lane || user.addresses[0]?.lane,
+          city : city || user.addresses[0]?.city ,
+          street : street || user.addresses[0]?.street ,
+          postal_code: postalCode || user.addresses[0]?.postal_code,
+          is_default: true,
+        },
+      ],
+    };
+
+    try {
+      const response = await axiosInstance.put(
+        `/user/update-profile/${user?._id}`,
+        updatedData,
+      );
+
+      if (response.status === 200) {
+        toast.success("Profile updated successfully.");
+      }
+    } catch (error) {
+      toast.error(
+        error.message || "Failed to update profile. Please try again.",
+      );
+    }
+  };
+
+
+  console.log("User data from store:", user);
   return (
     <div>
       {/* navbar */}
       <Navbar />
       {/* content */}
       <div className="px-10 py-6 w-screen h-screen">
+        {/* address input */}
+        {inputAddress && (
+          <div className="w-screen h-screen z-10 bg-black/40 absolute top-0 left-0 flex items-center justify-center overflow-hidden">
+            <div className=" bg-white px-6 py-3 rounded-2xl">
+              <div>
+                <h1 className="text-2xl font-bold text-primary">
+                  Update Address Details
+                </h1>
+                <p className="text-secondary text-xs font-light">
+                  Add/update address details to your profile.
+                </p>
+
+                {/* address input fields */}
+                <div className="w-full h-full grid grid-cols-2 gap-3 mt-4">
+                  {/* left column */}
+                  <div className="w-full h-full grid grid-rows-3">
+                    <div className="flex flex-col gap-2">
+                      <label className="text-black text-xs font-light">
+                        Street Address
+                      </label>
+                      <input
+                        type="text"
+                        placeholder="Enter your street address"
+                        className="border border-gray-300 rounded-md p-2 focus:outline-none focus:ring-2 focus:ring-primary"
+                        value={lane}
+                        onChange={(e) => setLane(e.target.value)}
+                      />
+                    </div>
+                    <div className="flex flex-col gap-2">
+                      <label className="text-black text-xs font-light">
+                        City
+                      </label>
+                      <input
+                        type="text"
+                        placeholder="Enter your city"
+                        value={city}
+                        onChange={(e) => setCity(e.target.value)}
+                        className="border border-gray-300 rounded-md p-2 focus:outline-none focus:ring-2 focus:ring-primary"
+                      />
+                    </div>
+                    <div className="flex flex-col gap-2">
+                      <label className="text-black text-xs font-light">
+                        State
+                      </label>
+                      <input
+                        type="text"
+                        value={street}
+                        onChange={(e) => setStreet(e.target.value)}
+                        placeholder="Enter your state"
+                        className="border border-gray-300 rounded-md p-2 focus:outline-none focus:ring-2 focus:ring-primary"
+                      />
+                    </div>
+                  </div>
+
+                  {/* right column */}
+                  <div className="w-full h-full grid grid-rows-3">
+                    <div className="flex flex-col gap-2">
+                      <label className="text-black text-xs font-light">
+                        Country
+                      </label>
+                      <input
+                        type="text"
+                        value={country}
+                        onChange={(e) => setCountry(e.target.value)}
+                        placeholder="Enter your country"
+                        className="border border-gray-300 rounded-md p-2 focus:outline-none focus:ring-2 focus:ring-primary"
+                      />
+                    </div>
+                    <div className="flex flex-col gap-2">
+                      <label className="text-black text-xs font-light">
+                        Postal Code
+                      </label>
+                      <input
+                        type="text"
+                        value={postalCode}
+                        onChange={(e) => setPostalCode(e.target.value)}
+                        placeholder="Enter your postal code"
+                        className="border border-gray-300 rounded-md p-2 focus:outline-none focus:ring-2 focus:border-primary"
+                      />
+                    </div>
+                  </div>
+                </div>
+
+                <div className=" flex items-center justify-end gap-2 w-full mt-4">
+                  <button
+                    onClick={() => setInputAddress(false)}
+                    className="btn-secondary"
+                  >
+                    Cancel
+                  </button>
+                  <button className="btn-primary">Save Address</button>
+                </div>
+              </div>
+            </div>
+          </div>
+        )}
+
         {/* header */}
 
         <div>
@@ -55,19 +219,21 @@ const Profile = () => {
                       className="w-24 h-24 rounded-full"
                     />
                   </div>
-                  <h1 className="text-main font-bold text-lg">Alex Morgan</h1>
+                  <h1 className="text-main font-bold text-lg">
+                    {user?.first_name} {user?.last_name}
+                  </h1>
                   <p className="text-secondary text-xs font-light">
-                    alex.morgan@example.com
+                    {user?.email}
                   </p>
                   <p className="text-main text-xs font-light">
-                    +94 77 123 4567
+                    {user?.phone_number || "Phone number not provided"}
                   </p>
                   <div className="flex items-center justify-center gap-2 mt-2">
                     <BlinkingDot color="bg-orange-500" size="w-2 h-2" />
                     <p className="text-main text-xs font-light ">
                       Verified Account •
                       <span className="text-secondary">
-                        Member since Oct 2024
+                        Member since {user?.createdAt.slice(0, 10) || "N/A"}
                       </span>
                     </p>
                   </div>
@@ -251,7 +417,7 @@ const Profile = () => {
                 </div>
                 {/* sign out */}
                 <div className="w-full h-full relative bottom-0 mt-10">
-                  <button className="btn-primary w-full">
+                  <button onClick={logout} className="btn-primary w-full">
                     <LogOut /> Log out
                   </button>
                 </div>
@@ -279,24 +445,29 @@ const Profile = () => {
                     <h2>First Name</h2>
                     <input
                       type="text"
-                      placeholder="First Name"
+                      placeholder={user?.first_name || "Enter your first name"}
                       className="input-special w-full "
+                      onChange={(e) => setFirstName(e.target.value)}
                     />
                   </div>
                   <div className="mt-2">
                     <h2>Email Address</h2>
                     <input
                       type="text"
-                      placeholder="alex.morgan@example.com"
+                      placeholder={user?.email || "Enter your email"}
                       className="input-special w-full "
+                      onChange={(e) => setEmail(e.target.value)}
                     />
                   </div>
                   <div className="mt-2">
                     <h2>Date of Birth</h2>
                     <input
                       type="date"
-                      placeholder="08/08/1990"
+                      placeholder={
+                        user?.date_of_birth || "Enter your date of births"
+                      }
                       className="input-special w-full "
+                      onChange={(e) => setDateOfBirth(e.target.value)}
                     />
                   </div>
                 </div>
@@ -306,21 +477,27 @@ const Profile = () => {
                     <h2>Last Name</h2>
                     <input
                       type="text"
-                      placeholder="Morgan"
+                      placeholder={user?.last_name || "enter your last name"}
                       className="input-special w-full "
+                      onChange={(e) => setLastName(e.target.value)}
                     />
                   </div>
                   <div className="mt-2">
                     <h2>Phone Number</h2>
                     <input
                       type="text"
-                      placeholder="77 123 4567"
+                      placeholder={
+                        user?.phone_number || "Enter your phone numbers"
+                      }
                       className="input-special w-full "
+                      onChange={(e) => setPhoneNumber(e.target.value)}
                     />
                   </div>
                   <div className="flex items-center justify-start gap-2 mt-6">
                     <button className="btn-ghost">Discard</button>
-                    <button className="btn-primary">Save Changes</button>
+                    <button onClick={updateProfile} className="btn-primary">
+                      Save Changes
+                    </button>
                   </div>
                 </div>
               </div>
@@ -339,7 +516,10 @@ const Profile = () => {
                   </p>
                 </div>
                 <div>
-                  <button className="btn-ghost flex items-center justify-center gap-3">
+                  <button
+                    onClick={() => setInputAddress(true)}
+                    className="btn-ghost flex items-center justify-center gap-3"
+                  >
                     Add New <Plus />
                   </button>
                 </div>
@@ -442,7 +622,9 @@ const Profile = () => {
                   </p>
                 </div>
                 <div>
-                  <p className="text-primary font-light text-sm hover:underline cursor-pointer">View All (8)</p>
+                  <p className="text-primary font-light text-sm hover:underline cursor-pointer">
+                    View All (8)
+                  </p>
                 </div>
               </div>
               <div className="grid grid-cols-2 gap-6">
@@ -452,11 +634,19 @@ const Profile = () => {
                     <img src={food_1} className="w-24 h-18 rounded-lg" />
                   </div>
                   <div>
-                    <h1 className="text-lg font-semibold text-main">Napoli Margherita Pizza</h1>
-                    <p className="text-xs text-secondary font-light">Trattoria Roma • 25 mins</p>
+                    <h1 className="text-lg font-semibold text-main">
+                      Napoli Margherita Pizza
+                    </h1>
+                    <p className="text-xs text-secondary font-light">
+                      Trattoria Roma • 25 mins
+                    </p>
                     <div className="flex items-center justify-between gap-2">
-                      <p className="text-xs text-primary font-semibold">Rs. 2,450</p>
-                      <button className="text-xs font-light text-main bg-amber-600 px-3 py-1 rounded-lg cursor-pointer">Reorder</button>
+                      <p className="text-xs text-primary font-semibold">
+                        Rs. 2,450
+                      </p>
+                      <button className="text-xs font-light text-main bg-amber-600 px-3 py-1 rounded-lg cursor-pointer">
+                        Reorder
+                      </button>
                     </div>
                   </div>
                 </div>
@@ -466,11 +656,19 @@ const Profile = () => {
                     <img src={food_1} className="w-24 h-18 rounded-lg" />
                   </div>
                   <div>
-                    <h1 className="text-lg font-semibold text-main">Claypot Black Pork Curry</h1>
-                    <p className="text-xs text-secondary font-light">Ceylon Heritage • 35 mins</p>
+                    <h1 className="text-lg font-semibold text-main">
+                      Claypot Black Pork Curry
+                    </h1>
+                    <p className="text-xs text-secondary font-light">
+                      Ceylon Heritage • 35 mins
+                    </p>
                     <div className="flex items-center justify-between gap-2">
-                      <p className="text-xs text-primary font-semibold">Rs. 1,850</p>
-                      <button className="text-xs font-light text-main bg-amber-600 px-3 py-1 rounded-lg cursor-pointer">Reorder</button>
+                      <p className="text-xs text-primary font-semibold">
+                        Rs. 1,850
+                      </p>
+                      <button className="text-xs font-light text-main bg-amber-600 px-3 py-1 rounded-lg cursor-pointer">
+                        Reorder
+                      </button>
                     </div>
                   </div>
                 </div>

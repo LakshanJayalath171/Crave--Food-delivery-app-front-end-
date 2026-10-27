@@ -1,10 +1,13 @@
 import { Edit3, Trash2 } from "lucide-react"
+import { toast } from "react-toastify"
+import axiosInstance from "../api/axiosInstance"
+export type Category = {
+  menu_name: string
+  menu_image: string
+}
 
 type CategoryCardProps = {
-  category: {
-    menu_name: string
-    menu_image: string
-  }
+  category: Category
   productCount: number
   isAvailable: boolean
   onEdit: () => void
@@ -20,25 +23,51 @@ const Category_card = ({
   onDelete,
   onToggleAvailability,
 }: CategoryCardProps) => {
+
+  const handleDelete = async () => {
+
+    const confirmDelete = window.confirm(`Are you sure you want to delete the category "${category?.menu_name}"? This action cannot be undone.`)
+
+    if (!confirmDelete) {
+      return
+    }
+
+    try{
+      const response = await axiosInstance.delete(`admin/delete-category/${category?._id}`)
+
+      if(response.success ==false){
+        toast.error(response.message)
+        return
+      }
+      toast.success("Category deleted successfully")
+    }
+    catch (error) {
+      toast.error(error)
+    }
+  }
   return (
     <article className="overflow-hidden rounded-lg bg-white shadow-sm">
-      <div className="relative h-28 overflow-hidden bg-orange-50">
-        <img src={category.menu_image} alt={category.menu_name} className="h-full w-full object-cover" />
+      <div className="relative h-36 overflow-hidden bg-orange-50">
+        {category?.image_url ? (
+          <img src={category?.image_url} alt={category?.name} className="h-full w-full object-cover" />
+        ) : (
+          <div className="flex h-full items-center justify-center text-sm text-secondary">No image</div>
+        )}
         <span className={`absolute right-3 top-3 rounded-full px-2.5 py-1 text-xs font-semibold ${isAvailable ? "bg-green-100 text-green-700" : "bg-gray-100 text-gray-600"}`}>
-          {isAvailable ? "Available" : "Unavailable"}
+          {category?.availability ? "Available" : "Unavailable"}
         </span>
       </div>
 
       <div className="p-4">
         <div className="flex items-start justify-between gap-3">
           <div>
-            <h2 className="text-lg font-bold text-main">{category.menu_name}</h2>
-            <p className="mt-1 text-sm text-secondary">{productCount} {productCount === 1 ? "product" : "products"} in this category</p>
+            <h2 className="text-lg font-bold text-main">{category?.name}</h2>
+            <p className="mt-1 text-sm text-secondary">{productCount?.num_of_products} {productCount === 1 ? "product" : "products"} in this category</p>
           </div>
           <button
             type="button"
             role="switch"
-            aria-checked={isAvailable}
+            aria-checked={category?.availability}
             aria-label={`${isAvailable ? "Disable" : "Enable"} ${category.menu_name}`}
             onClick={onToggleAvailability}
             className={`relative inline-flex h-6 w-11 shrink-0 items-center rounded-full transition-colors ${isAvailable ? "bg-green-500" : "bg-gray-300"}`}
@@ -55,7 +84,7 @@ const Category_card = ({
             <button type="button" onClick={onEdit} aria-label={`Edit ${category.menu_name}`} title={`Edit ${category.menu_name}`} className="rounded-md p-2 text-secondary transition-colors hover:bg-orange-100 hover:text-orange-600">
               <Edit3 size={16} />
             </button>
-            <button type="button" onClick={onDelete} aria-label={`Delete ${category.menu_name}`} title={`Delete ${category.menu_name}`} className="rounded-md p-2 text-secondary transition-colors hover:bg-red-100 hover:text-red-600">
+            <button type="button" onClick={handleDelete} aria-label={`Delete ${category.menu_name}`} title={`Delete ${category.menu_name}`} className="rounded-md p-2 text-secondary transition-colors hover:bg-red-100 hover:text-red-600">
               <Trash2 size={16} />
             </button>
           </div>

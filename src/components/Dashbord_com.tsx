@@ -1,39 +1,11 @@
 import { Clock, Hamburger, PaperBag, Receipt, Star } from "lucide-react";
 import { food_list } from "../assets/frontend_assets/assets";
 import BlinkingDot from "./Dot";
-
+import { useEffect, useState } from "react";
+import axiosInstance from "../api/axiosInstance";
+import { toast } from "react-toastify";
 
 // static data for orders
-const orders = [
-  {
-    id: "#CRV-10482",
-    items: "Margherita Pizza x 1, Garlic Bread x 1",
-    placed: "Today, 12:35 PM",
-    status: "Preparing",
-    statusClass: "bg-orange-500/20 text-orange-600",
-  },
-  {
-    id: "#CRV-10481",
-    items: "Classic Beef Burger x 2, Fries x 1",
-    placed: "Today, 12:28 PM",
-    status: "Pending",
-    statusClass: "bg-yellow-500/20 text-yellow-600",
-  },
-  {
-    id: "#CRV-10480",
-    items: "Chicken Kottu x 1, Lime Juice x 2",
-    placed: "Today, 12:14 PM",
-    status: "In Transit",
-    statusClass: "bg-blue-500/20 text-blue-600",
-  },
-  {
-    id: "#CRV-10479",
-    items: "Crispy Chicken Wrap x 2",
-    placed: "Today, 11:56 AM",
-    status: "Delivered",
-    statusClass: "bg-green-500/20 text-green-600",
-  },
-];
 
 const topPerformingDishes = food_list.slice(0, 5).map((dish, index) => ({
   ...dish,
@@ -42,8 +14,26 @@ const topPerformingDishes = food_list.slice(0, 5).map((dish, index) => ({
   customerRating: [4.9, 4.8, 4.7, 4.6, 4.5][index],
 }));
 
-
 const Dashbord_com = () => {
+  const [orderss, setOrderss] = useState([]);
+
+  const getAllOrders = async () => {
+    try {
+      const response = await axiosInstance.get("/admin/all-orders");
+
+      if (response.status === 200) {
+        setOrderss(response.data.orders);
+      }
+    } catch (error) {
+      toast.error("Error fetching orders:", error);
+    }
+  };
+
+  useEffect(() => {
+    getAllOrders();
+  }, []);
+
+  
   return (
     <div>
       {/* heading */}
@@ -159,24 +149,32 @@ const Dashbord_com = () => {
                 <th className="px-4 py-3 text-right">Actions</th>
               </tr>
             </thead>
-            <tbody>
-              {orders.map((order) => (
+            <tbody className="">
+              {orderss.map((order) => (
                 <tr
                   key={order.id}
                   className="border-b border-black/5 last:border-b-0 text-sm text-main"
                 >
-                  <td className="px-4 py-4 font-semibold">{order.id}</td>
-                  <td className="px-4 py-4 text-secondary">{order.items}</td>
-                  <td className="px-4 py-4 text-secondary">{order.placed}</td>
+                  <td className="px-4  font-semibold flex-start"># {order?._id}</td>
+
+                  <td>{order?.user_name}</td>
+                  
+                  <td className="px-4 py-4 text-secondary">{order?.createdAt.slice(0, 10)}</td>
                   <td className="px-4 py-4">
-                    <span className={`rounded-full px-3 py-1 text-xs font-medium ${order.statusClass}`}>
-                      {order.status}
+                    <span
+                      className={`rounded-full px-3 py-1 text-xs font-medium ${order.statusClass}`}
+                    >
+                      {order?.status}
                     </span>
                   </td>
                   <td className="px-4 py-4">
                     <div className="flex justify-end gap-2">
-                      <button className="btn-primary text-xs font-bold">Accept</button>
-                      <button className="btn-secondary text-xs font-bold">Decline</button>
+                      <button className="btn-primary text-xs font-bold">
+                        Accept
+                      </button>
+                      <button className="btn-secondary text-xs font-bold">
+                        Decline
+                      </button>
                     </div>
                   </td>
                 </tr>
@@ -189,8 +187,12 @@ const Dashbord_com = () => {
       {/* top perfoming dishes*/}
       <div className="mt-4">
         <div>
-          <h1 className="text-2xl font-bold text-main">Top Performing Dishes</h1>
-          <p className="text-xs font-light text-secondary">Ranked by sales volume and gross revenue this week.</p>
+          <h1 className="text-2xl font-bold text-main">
+            Top Performing Dishes
+          </h1>
+          <p className="text-xs font-light text-secondary">
+            Ranked by sales volume and gross revenue this week.
+          </p>
         </div>
 
         {/* table */}
@@ -212,7 +214,9 @@ const Dashbord_com = () => {
                   key={dish._id}
                   className="border-b border-black/5 last:border-b-0 text-sm text-main"
                 >
-                  <td className="px-4 py-4 font-bold text-primary">#{index + 1}</td>
+                  <td className="px-4 py-4 font-bold text-primary">
+                    #{index + 1}
+                  </td>
                   <td className="px-4 py-4">
                     <div className="flex items-center gap-3">
                       <img
@@ -225,10 +229,15 @@ const Dashbord_com = () => {
                   </td>
                   <td className="px-4 py-4 text-secondary">{dish.category}</td>
                   <td className="px-4 py-4 font-medium">{dish.totalOrders}</td>
-                  <td className="px-4 py-4 font-medium">Rs. {dish.grossRevenue.toLocaleString()}</td>
+                  <td className="px-4 py-4 font-medium">
+                    Rs. {dish.grossRevenue.toLocaleString()}
+                  </td>
                   <td className="px-4 py-4">
                     <span className="flex items-center gap-1 font-medium">
-                      <Star size={15} className="fill-orange-400 text-orange-400" />
+                      <Star
+                        size={15}
+                        className="fill-orange-400 text-orange-400"
+                      />
                       {dish.customerRating.toFixed(1)}
                     </span>
                   </td>

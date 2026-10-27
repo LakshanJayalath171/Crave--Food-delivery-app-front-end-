@@ -1,12 +1,34 @@
 import { Filter, Star } from "lucide-react"
 import Navbar from "../components/Navbar"
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import DishCard from "../components/DishCard";
-import {  food_list } from "../assets/frontend_assets/assets";
+import axiosInstance from "../api/axiosInstance";
 
 const Explore = () => {
 
+  const [products, setProducts] = useState();
+
   const [priceRange, setPriceRange] = useState(0);
+
+  const getAllProducts = async () => {
+    try{
+      const response = await axiosInstance.get("/admin/all-products");
+
+      if(response.data.success){
+        setProducts(response.data.products);
+        
+      }
+    }
+    catch(error){
+      console.log(error);
+    }
+  }
+
+  useEffect(() => {
+    getAllProducts();
+  }, []);
+
+  
   return (
     <div className="w-screen h-screen">
       {/* navbar */}
@@ -168,8 +190,8 @@ const Explore = () => {
         {/* products */}
         <div className="w-3/4 flex items-start justify-start overflow-y-auto h-[70vh] gap-4 px-6 py-2">
           <div className="grid grid-cols-3 gap-4">
-            {food_list.map((items) => (
-              <DishCard key={items._id} name={items.name} image={items.image} description={items.description} price={`Rs. ${items.price}`}/>
+            {products?.map((items) => (
+              <DishCard key={items._id} id={items._id} name={items.name} image={items.image_url} description={items.description} price={`Rs. ${items.price}`}/>
             ))}
           </div>
         </div>

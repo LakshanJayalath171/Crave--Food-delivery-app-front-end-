@@ -1,11 +1,12 @@
-import { useState } from "react"
+import { useEffect, useState } from "react"
 import { CircleCheck, Eye, Folder, Plus } from "lucide-react"
 import { food_list, menu_list } from "../assets/frontend_assets/assets"
 import Category_card from "./Category_card"
+import axiosInstance from "../api/axiosInstance"
 import Input_category from "./Input_category"
 
 const Categories = () => {
-  const [categories, setCategories] = useState(menu_list)
+  const [categories, setCategories] = useState()
   const [availableCategoryNames, setAvailableCategoryNames] = useState(() => new Set(menu_list.map((category) => category.menu_name)))
 
   const toggleCategoryAvailability = (categoryName: string) => {
@@ -31,13 +32,26 @@ const Categories = () => {
 
   const [pannel,setPannel] = useState(false)
 
+  const getAllCategories = async() => {
+    try{
+      const response = await axiosInstance.get("/admin/all-categories")
+      setCategories(response.data.categories)
+    }
+    catch(err){
+      console.log(err)
+    }
+  }
+
+  useEffect(() => {
+    getAllCategories()
+  })
   return (
     <div>
       {pannel && 
             <div className="fixed top-0 left-0 z-50 flex h-screen w-screen bg-black/40 ">
               <div className="flex-5" onClick={()=>setPannel(false)}></div>
               <div className="flex-2 w-full h-screen bg-white">
-                <Input_category/>
+                <Input_category setPannel={setPannel}/>
               </div>
               
             </div>}
@@ -77,7 +91,7 @@ const Categories = () => {
             </div>
           </div>
           <div>
-            <h1 className="text-2xl font-bold text-main">{categories.length}</h1>
+            <h1 className="text-2xl font-bold text-main">{categories?.length}</h1>
             <p className="text-xs font-light text-secondary">
               Primary navigation groups
             </p>
@@ -111,7 +125,7 @@ const Categories = () => {
             </div>
           </div>
           <div>
-            <h1 className="text-2xl font-bold text-main">{food_list.filter((dish) => !categories.some((category) => category.menu_name === dish.category)).length}</h1>
+            <h1 className="text-2xl font-bold text-main">{food_list.filter((dish) => !categories?.some((category) => category?.name === dish.category)).length}</h1>
             <p className="text-xs font-light text-secondary">
               All 48 menu items categorized
             </p>
@@ -131,15 +145,15 @@ const Categories = () => {
       </div>
       {/* card grid */}
       <div className="mt-4 grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-4">
-        {categories.map((category) => (
+        {categories?.map((category,index) => (
           <Category_card
-            key={category.menu_name}
+            key={index}
             category={category}
-            productCount={food_list.filter((dish) => dish.category === category.menu_name).length}
-            isAvailable={availableCategoryNames.has(category.menu_name)}
+            productCount={food_list.filter((dish) => dish.category === category?.name).length}
+            isAvailable={availableCategoryNames.has(category?.name)}
             onEdit={() => undefined}
-            onDelete={() => deleteCategory(category.menu_name)}
-            onToggleAvailability={() => toggleCategoryAvailability(category.menu_name)}
+            onDelete={() => deleteCategory(category?.name)}
+            onToggleAvailability={() => toggleCategoryAvailability(category?.name)}
           />
         ))}
       </div>
