@@ -1,5 +1,6 @@
 import { create } from "zustand";
 import axiosInstance from "../api/axiosInstance";
+import  { socket } from '../lib/soket'
 
 // Define the user type
 interface User {
@@ -24,6 +25,16 @@ interface AuthState {
   initializeAuth: () => Promise<void>; // CHANGED: Async function
   logout: () => void;
 }
+
+// soket helper function
+const ConnectSocket = (token:string) =>{
+  socket.auth = { token };
+
+  if(!socket.connected){
+    socket.connect();
+  }
+}
+
 
 // Create Zustand store
 export const useAuthStore = create<AuthState>((set) => ({
@@ -57,6 +68,8 @@ export const useAuthStore = create<AuthState>((set) => ({
 
     axiosInstance.defaults.headers.common["Authorization"] =
       `Bearer ${token}`;
+
+    ConnectSocket(token);
 
     try {
       const response = await axiosInstance.get(
@@ -99,5 +112,7 @@ export const useAuthStore = create<AuthState>((set) => ({
       isAuthenticated: false,
       isLoading: false, 
     });
+
+    socket.disconnect();
   },
 }));

@@ -7,6 +7,7 @@ import { useState } from "react";
 import axiosInstance from "../api/axiosInstance";
 import { toast } from "react-toastify";
 import {useAuthStore} from "../store/authStore"
+import { socket } from "../lib/soket";
 
 const Login = () => {
 
@@ -23,6 +24,13 @@ const Login = () => {
         localStorage.setItem("token", response.data.token)
         axiosInstance.defaults.headers.common["Authorization"] = `Bearer ${response.data.token}`;
         useAuthStore.setState({user: response.data.data, isAuthenticated: true})
+
+        // connect socket after successful login
+        socket.auth = { token: response.data.token };
+        if(!socket.connected){
+          socket.connect();
+        }
+        
         toast.success("Login successful")
         navigate("/")
       }

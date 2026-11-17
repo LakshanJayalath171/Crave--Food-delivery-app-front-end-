@@ -8,6 +8,7 @@ import Categories from '../components/Categories'
 import Orders from '../components/Orders'
 import axiosInstance from '../api/axiosInstance'
 import useCategoryStore from '../store/categoryStore'
+import {socket} from '../lib/soket'
 
 const Dashboard = () => {
 
@@ -26,6 +27,12 @@ const Dashboard = () => {
 
   useEffect(() => {
     getAllCategories();
+
+    socket.connect();
+
+    return () => {
+      socket.disconnect();
+    }
   },[])
 
   const [activeComponent, setActiveComponent] = useState('dashboard')
