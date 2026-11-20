@@ -1,8 +1,41 @@
 import BlinkingDot from "../components/Dot";
 import Footer from "../components/Footer";
-import Navbar from "../components/Navbar"
-import { PaperBag , CircleCheck, Bike, Clock, Hamburger, LocationEdit, Pizza, RotateCcw} from 'lucide-react';
+import Navbar from "../components/Navbar";
+import {
+  PaperBag,
+  CircleCheck,
+  Bike,
+  Clock,
+  Hamburger,
+  LocationEdit,
+  Pizza,
+  RotateCcw,
+} from "lucide-react";
+
+import { useOngoingOrders, usePreviousOrders } from "../hooks/useOrder";
+import { useAuthStore } from "../store/authStore";
+
 const My_orders = () => {
+  const { user } = useAuthStore();
+  const user_id = user?._id;
+
+  // Fetch ongoing orders
+  const {
+    data: ongoingOrders,
+    isLoading: ongoingLoading,
+    isError: ongoingError,
+  } = useOngoingOrders(user_id);
+
+  // Fetch previous orders
+  const {
+    data: previousOrders,
+    isLoading: previousLoading,
+    isError: previousError,
+  } = usePreviousOrders(user_id);
+
+  console.log("Ongoing Orders:", ongoingOrders);
+  console.log("Previous Orders:", previousOrders);
+
   return (
     <div>
       {/* navigation bar */}
@@ -199,13 +232,17 @@ const My_orders = () => {
         <div>
           <div className="flex items-center justify-between px-4 py-2 mt-10">
             <div>
-              <h1 className="text-2xl font-bold text-main">Your Order History</h1>
-            <p className="text-secondary font-light  text-xs">
-              Everything you've enjoyed, with instant reordering and archived
-              receipts.
-            </p>
+              <h1 className="text-2xl font-bold text-main">
+                Your Order History
+              </h1>
+              <p className="text-secondary font-light  text-xs">
+                Everything you've enjoyed, with instant reordering and archived
+                receipts.
+              </p>
             </div>
-            <p className="text-secondary font-light text-xs">Showing 3 of 14 records</p>
+            <p className="text-secondary font-light text-xs">
+              Showing 3 of 14 records
+            </p>
           </div>
 
           {/* resusable order card */}
@@ -220,18 +257,31 @@ const My_orders = () => {
                 <div>
                   <div className="flex items-center justify-start gap-2">
                     <h1 className="text-main font-bold">Napoli Kitchen</h1>
-                    <div className="bg-green-500/40 text-xs px-4 py-1 rounded-full flex items-center justify-center gap-3 text-green-500"><CircleCheck size={15}/>Delivered</div>
+                    <div className="bg-green-500/40 text-xs px-4 py-1 rounded-full flex items-center justify-center gap-3 text-green-500">
+                      <CircleCheck size={15} />
+                      Delivered
+                    </div>
                   </div>
 
-                  <p className="text-secondary font-light text-xs">#CRV-10482 • Delivered on Oct 9, 2026 at 8:15 PM</p>
-                  <p className="text-secondary font-light text-xs">Margherita Pizza (Thin Crust) × 1, Cheesy Garlic Bread × 1</p>
-                  <p className="text-secondary font-light text-xs"><span className="font-bold text-main">Rs. 2,250</span> • Paid via Cash on Delivery</p>
+                  <p className="text-secondary font-light text-xs">
+                    #CRV-10482 • Delivered on Oct 9, 2026 at 8:15 PM
+                  </p>
+                  <p className="text-secondary font-light text-xs">
+                    Margherita Pizza (Thin Crust) × 1, Cheesy Garlic Bread × 1
+                  </p>
+                  <p className="text-secondary font-light text-xs">
+                    <span className="font-bold text-main">Rs. 2,250</span> •
+                    Paid via Cash on Delivery
+                  </p>
                 </div>
               </div>
               {/* right */}
 
               <div className="flex items-center justify-center gap-3">
-                <button className="flex items-center justify-center gap-2 font-bold btn-primary"><RotateCcw size={15}/>Reorder</button>
+                <button className="flex items-center justify-center gap-2 font-bold btn-primary">
+                  <RotateCcw size={15} />
+                  Reorder
+                </button>
                 <button className="btn-ghost ">View Details</button>
               </div>
             </div>
@@ -239,9 +289,9 @@ const My_orders = () => {
         </div>
       </div>
 
-      <Footer/>
+      <Footer />
     </div>
   );
-}
+};
 
-export default My_orders
+export default My_orders;
