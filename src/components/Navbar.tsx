@@ -72,6 +72,7 @@ const Navbar = () => {
     toDatabase();
   },[items]);
 
+  console.log("user data" , user);
   return (
     <nav className="relative flex items-center justify-between py-2 px-10">
       {/* left */}

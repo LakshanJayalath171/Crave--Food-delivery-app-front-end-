@@ -1,8 +1,6 @@
 import {
-  Check,
   CircleCheck,
   Clock,
-  Locate,
   MapPin,
   MessageCircle,
   MessageCircleQuestionMark,
@@ -12,6 +10,8 @@ import {
   Timer,
   X,
 } from "lucide-react";
+
+import { useAdminOrdersSocket } from "../hooks/useAdminOrderSocket";
 import { useEffect, useState } from "react";
 import BlinkingDot from "./Dot";
 import axiosInstance from "../api/axiosInstance";
@@ -52,7 +52,7 @@ const Orders = () => {
     getAllOrders();
   }, []);
 
-  console.log("selected order:", selectedOrder);
+  useAdminOrdersSocket();
   return (
     <div>
       {/* heading */}

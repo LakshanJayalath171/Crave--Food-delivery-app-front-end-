@@ -1,7 +1,7 @@
 import { create } from "zustand";
 import axiosInstance from "../api/axiosInstance";
 import { socket } from "../lib/soket";
-import { useNavigate } from "react-router-dom";
+
 
 
 
@@ -87,8 +87,15 @@ export const useAuthStore = create<AuthState>((set) => ({
 
       const userData: User = response.data.data;
 
+      // checking
+      
+
+      console.log("JWT PAYLOAD:", payload);
+      console.log("PROFILE RESPONSE:", response.data);
+      console.log("USER ROLE:", userData?.role);
+
       if (userData.role !== "admin" && userData.role !== "user") {
-        throw new Error("Invalid user role");
+        throw new Error(`Invalid user role: ${userData.role}`);
       }
 
       set({
