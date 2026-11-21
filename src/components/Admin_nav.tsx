@@ -1,7 +1,15 @@
 import { Bell, Search } from "lucide-react"
 import BlinkingDot from "./Dot"
+import { useAuthStore } from "../store/authStore"
+import { useNavigate } from "react-router-dom"
 
 const Admin_nav = () => {
+    const {logout} = useAuthStore()
+    const navigate = useNavigate();
+    const handleLogout = () => {
+      logout();
+      navigate("/admin/signin");
+    };
   return (
     <nav className="px-10 py-2 flex items-center justify-between">
         <div className="flex items-center justify-start gap-2">
@@ -22,8 +30,9 @@ const Admin_nav = () => {
                 <input className="outline-none focus-within:outline-none" placeholder="search orders, menu items text-xs font-light "/>
             </div>
             <Bell className="text-primary cursor-pointer" size={20}/>
-            <div className="flex items-center justify-center">
-                <div className="bg-orange-500 rounded-full  w-8 h-8 flex items-center justify-center font-bold">K</div>
+            <div onClick={handleLogout} className="flex items-center justify-center">
+                
+                <div  className="bg-orange-500 rounded-full  w-8 h-8 flex items-center justify-center font-bold cursor-pointer">K</div>
             </div>
         </div>
     </nav>

@@ -10,6 +10,7 @@ import Dashboard from "./pages/Dashboard"
 import { ToastContainer } from "react-toastify"
 import { useAuthStore } from "./store/authStore"
 import { useEffect } from "react"
+import Admin_signin from "./pages/Admin_signin"
 
 const App = () => {
 
@@ -30,6 +31,7 @@ const App = () => {
         <Route path="/login" element={<Login/>} />
         <Route path="/signup" element={<SignUp/>} />
         <Route path="/admin/dashboard" element={<Dashboard/>} />
+        <Route path="/admin/signin" element={<Admin_signin/>} />
       </Routes>
     </div>
   )

@@ -1,7 +1,12 @@
 import { create } from "zustand";
 import axiosInstance from "../api/axiosInstance";
-import  { socket } from '../lib/soket'
+import { socket } from "../lib/soket";
+import { useNavigate } from "react-router-dom";
 
+
+
+
+type UserRole = "user" | "admin";
 // Define the user type
 interface User {
   _id: string;
@@ -9,7 +14,7 @@ interface User {
   last_name: string;
   phone_number: string;
   email: string;
-  role: string;
+  role: UserRole;
   birth_date: string;
   favorite_dishes: string[];
 }
@@ -27,14 +32,13 @@ interface AuthState {
 }
 
 // soket helper function
-const ConnectSocket = (token:string) =>{
+const ConnectSocket = (token: string) => {
   socket.auth = { token };
 
-  if(!socket.connected){
+  if (!socket.connected) {
     socket.connect();
   }
-}
-
+};
 
 // Create Zustand store
 export const useAuthStore = create<AuthState>((set) => ({
@@ -42,7 +46,6 @@ export const useAuthStore = create<AuthState>((set) => ({
   user: null,
   isAuthenticated: false,
   isLoading: true,
-
 
   setUser: (user) =>
     set({
@@ -57,60 +60,71 @@ export const useAuthStore = create<AuthState>((set) => ({
 
     if (!token) {
       delete axiosInstance.defaults.headers.common["Authorization"];
+
+      socket.disconnect();
+
       set({
         user: null,
         isAuthenticated: false,
         isLoading: false,
       });
 
-      return; 
+      return;
     }
 
-    axiosInstance.defaults.headers.common["Authorization"] =
-      `Bearer ${token}`;
-
-    ConnectSocket(token);
+    axiosInstance.defaults.headers.common["Authorization"] = `Bearer ${token}`;
 
     try {
-      const response = await axiosInstance.get(
-        "/auth/user/profile"
+      // Decode JWT payload (without verifying it).
+      const payload = JSON.parse(
+        atob(token.split(".")[1].replace(/-/g, "+").replace(/_/g, "/")),
       );
+
+      const profileEndpoint =
+        payload.role === "admin" ? "/auth/admin/profile" : "/auth/user/profile";
+
+      const response = await axiosInstance.get(profileEndpoint);
+
       const userData: User = response.data.data;
+
+      if (userData.role !== "admin" && userData.role !== "user") {
+        throw new Error("Invalid user role");
+      }
 
       set({
         user: userData,
         isAuthenticated: true,
       });
+
+      ConnectSocket(token);
     } catch (error) {
-      
       console.error("Authentication initialization failed:", error);
 
       localStorage.removeItem("token");
 
       delete axiosInstance.defaults.headers.common["Authorization"];
 
+      socket.disconnect();
+
       set({
         user: null,
         isAuthenticated: false,
       });
     } finally {
-      
       set({ isLoading: false });
     }
   },
 
   // Logout
   logout: () => {
-    
     localStorage.removeItem("token");
     localStorage.removeItem("crave-cart-storage");
     delete axiosInstance.defaults.headers.common["Authorization"];
 
-    
     set({
       user: null,
       isAuthenticated: false,
-      isLoading: false, 
+      isLoading: false,
     });
 
     socket.disconnect();

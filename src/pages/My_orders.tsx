@@ -15,6 +15,12 @@ import {
 import { useOngoingOrders, usePreviousOrders } from "../hooks/useOrder";
 import { useAuthStore } from "../store/authStore";
 
+// import for make websocket connection
+import { useEffect } from "react";
+import { useQueryClient } from "@tanstack/react-query";
+import { socket } from "../lib/soket";
+import type { OrderStatus } from "../types/order.types";
+
 const My_orders = () => {
   const { user } = useAuthStore();
   const user_id = user?._id;
@@ -33,9 +39,22 @@ const My_orders = () => {
     isError: previousError,
   } = usePreviousOrders(user_id);
 
-  console.log("Ongoing Orders:", ongoingOrders);
-  console.log("Previous Orders:", previousOrders);
+  const querryClient = useQueryClient()
 
+  useEffect(()=>{
+    const handleStatusUpdate = (payload :{
+      orderId :string,
+      status:OrderStatus
+    })=>{
+      console.log("🔔 Order status updated:", payload);
+    }
+
+    socket.on("orderStatusUpdate", handleStatusUpdate)
+
+    return ()=>{
+      socket.off("orderStatusUpdate", handleStatusUpdate)
+    }
+  },[])
   return (
     <div>
       {/* navigation bar */}
