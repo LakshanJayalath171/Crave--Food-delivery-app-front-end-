@@ -11,9 +11,12 @@ import { ToastContainer } from "react-toastify"
 import { useAuthStore } from "./store/authStore"
 import { useEffect } from "react"
 import Admin_signin from "./pages/Admin_signin"
+import {useOrderStatusSocket} from "./hooks/useOrderStatusSocket"
 
 const App = () => {
 
+  useOrderStatusSocket()
+  
   useEffect(() => {
     useAuthStore.getState().initializeAuth()
   },[])
