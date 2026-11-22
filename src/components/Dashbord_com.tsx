@@ -150,7 +150,7 @@ const Dashbord_com = () => {
               </tr>
             </thead>
             <tbody className="">
-              {orderss.map((order) => (
+              {orderss?.map((order) => (
                 <tr
                   key={order.id}
                   className="border-b border-black/5 last:border-b-0 text-sm text-main"
@@ -209,7 +209,7 @@ const Dashbord_com = () => {
               </tr>
             </thead>
             <tbody>
-              {topPerformingDishes.map((dish, index) => (
+              {topPerformingDishes?.map((dish, index) => (
                 <tr
                   key={dish._id}
                   className="border-b border-black/5 last:border-b-0 text-sm text-main"

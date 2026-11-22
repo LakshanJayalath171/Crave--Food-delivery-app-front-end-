@@ -1,25 +1,21 @@
 import { useEffect } from "react";
+import { useQueryClient } from "@tanstack/react-query";
 import { socket } from "../lib/soket";
-
-interface NewOrderPayload {
-  orderId: string;
-  order: {
-    _id: string;
-    user_id: string;
-    user_name: string;
-    phone_number: string;
-    total_price: string;
-    status: string;
-    createdAt: string;
-  };
-}
+import { toast } from "react-toastify";
 
 export const useAdminOrdersSocket = () => {
-  useEffect(() => {
-    const handleNewOrder = (payload: NewOrderPayload) => {
-      console.log("🔔 New order received:", payload);
+  const queryClient = useQueryClient();
 
-      // We'll update the dashboard order list in the next step.
+  useEffect(() => {
+    const handleNewOrder = (payload: any) => {
+      toast.success("🔔 New order received:" + payload.orderId, {
+        position: "top-right",
+        autoClose: 5000,
+      });
+
+      queryClient.invalidateQueries({
+        queryKey: ["admin", "orders"],
+      });
     };
 
     socket.on("new-order", handleNewOrder);
@@ -27,5 +23,5 @@ export const useAdminOrdersSocket = () => {
     return () => {
       socket.off("new-order", handleNewOrder);
     };
-  }, []);
+  }, [queryClient]);
 };

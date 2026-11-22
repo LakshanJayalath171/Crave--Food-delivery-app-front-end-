@@ -12,24 +12,20 @@ import {
 } from "lucide-react";
 
 import { useAdminOrdersSocket } from "../hooks/useAdminOrderSocket";
-import { useEffect, useState } from "react";
+import { useState } from "react";
 import BlinkingDot from "./Dot";
 import axiosInstance from "../api/axiosInstance";
 import { toast } from "react-toastify";
+import { useAdminOrders } from "../hooks/useAdminOrders";
 
 const Orders = () => {
   const [selectedOrder, setSelectedOrder] = useState(null);
-  const [orders, setOrders] = useState([]);
+  
 
-  const getAllOrders = async () => {
-    try {
-      const response = await axiosInstance.get("admin/all-orders");
+  useAdminOrdersSocket();
 
-      setOrders(response.data.orders);
-    } catch (error) {
-      console.error(error);
-    }
-  };
+  const { data :orders } = useAdminOrders();
+  console.log("orders", orders);
 
   const updateOrderStatus = async (orderId, newStatus) => {
     try {
@@ -41,18 +37,13 @@ const Orders = () => {
       if (response.status === 200) {
         toast.success(`order status updated to ${newStatus}`);
       }
-      getAllOrders();
+      
     } catch (error) {
       toast.error("Failed to update order status");
       console.error(error);
     }
   };
 
-  useEffect(() => {
-    getAllOrders();
-  }, []);
-
-  useAdminOrdersSocket();
   return (
     <div>
       {/* heading */}
@@ -182,7 +173,7 @@ const Orders = () => {
                   </tr>
                 </thead>
                 <tbody className="divide-y divide-orange-100">
-                  {orders.map((order) => (
+                  {orders?.map((order) => (
                     <tr
                       key={order?._id}
                       className="hover:bg-orange-500/40 cursor-pointer transition-colors "
@@ -208,7 +199,7 @@ const Orders = () => {
                       </td>
                       <td className="px-4 py-4 align-top">
                         <ul className="space-y-1 text-secondary">
-                          {order.items.map((item) => (
+                          {order?.items.map((item) => (
                             <li
                               key={item?.product_id}
                               className="flex items-center justify-between gap-6"
@@ -260,10 +251,13 @@ const Orders = () => {
                 <div className="flex items-center justify-center py-10">
                   <div>
                     <div className="flex items-center justify-center">
-                      {selectedOrder?.status === "cancelled" && (<X size={50} className="text-red-500" />)}
-                      
-                      {selectedOrder?.status === "completed" && (<CircleCheck size={50} className="text-green-500" />)}
-                      
+                      {selectedOrder?.status === "cancelled" && (
+                        <X size={50} className="text-red-500" />
+                      )}
+
+                      {selectedOrder?.status === "completed" && (
+                        <CircleCheck size={50} className="text-green-500" />
+                      )}
                     </div>
                     <div>
                       <p className="text-sm font-bold text-main">
