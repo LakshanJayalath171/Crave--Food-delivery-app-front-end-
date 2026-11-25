@@ -9,8 +9,35 @@ import Orders from '../components/Orders'
 import axiosInstance from '../api/axiosInstance'
 import useCategoryStore from '../store/categoryStore'
 import {socket} from '../lib/soket'
+import { useAuthStore } from '../store/authStore'
+import { Navigate } from 'react-router-dom'
+
 
 const Dashboard = () => {
+
+  const user = useAuthStore((state) => state.user);
+  const isAuthenticated = useAuthStore((state) => state.isAuthenticated);
+  const isLoading = useAuthStore((state) => state.isLoading);
+
+  if(isLoading){
+    return (
+      <div className='w-full h-screen flex justify-center items-center'>
+        <p className='text-2xl font-semibold'>Loading...</p>
+      </div>
+    )
+  }
+
+  if(!isAuthenticated ){
+    return (
+      <Navigate to="/admin/signin" replace />
+    )
+  }
+
+  if(!user || user.role !== 'admin'){
+    return (
+      <Navigate to="/" replace />
+    )
+  }
 
   const categories = useCategoryStore((state) => state.categories);
   const setCategories = useCategoryStore((state) => state.setCategories);
