@@ -7,7 +7,6 @@ import {
   Trash2,
   UtensilsCrossed,
 } from "lucide-react";
-import { food_list } from "../assets/frontend_assets/assets";
 import Input_product from "./Input_product";
 import useCategoryStore from "../store/categoryStore";
 import axiosInstance from "../api/axiosInstance";
@@ -17,9 +16,7 @@ const Products = () => {
   const categories = useCategoryStore((state) => state.categories);
 
   const [dishes, setDishes] = useState([]);
-  const [availableDishIds, setAvailableDishIds] = useState(
-    () => new Set(food_list.map((dish) => dish._id)),
-  );
+  
   const [selectedCategory, setSelectedCategory] = useState("All");
 
   const filteredDishes =
@@ -27,55 +24,81 @@ const Products = () => {
       ? dishes
       : dishes.filter((dish) => dish.category === selectedCategory);
 
-
   // delete dish from the list
-  const deleteDish = async (id: string)=>{
-    try{
-      const confirmDelete = window.confirm("Are you sure you want to delete this dish?");
+  const deleteDish = async (id: string) => {
+    try {
+      const confirmDelete = window.confirm(
+        "Are you sure you want to delete this dish?",
+      );
       if (!confirmDelete) {
         return; // Exit if the user cancels the deletion
       }
 
-      const response = await axiosInstance.delete(`/admin/delete-product/${id}`);
+      const response = await axiosInstance.delete(
+        `/admin/delete-product/${id}`,
+      );
 
-      if (response.data.success === false){
+      if (response.data.success === false) {
         toast.error(response.data.message);
         return;
       }
 
       toast.success(response.data.message);
       getAllProduct(); // Refresh the product list after deletion
-    }
-    catch(error){
+    } catch (error) {
       toast.error(error.message);
     }
-  }
+  };
 
   // fetching data from databse
-  const getAllProduct = async() =>{
-    try{
-      const response = await axiosInstance.get('/admin/all-products')
+  const getAllProduct = async () => {
+    try {
+      const response = await axiosInstance.get("/admin/all-products");
 
-      setDishes(response.data.products)
-    }
-    catch(error){
+      setDishes(response.data.products);
+    } catch (error) {
       toast.error(error.message);
-      console.error('Error fetching products:', error);
+      console.error("Error fetching products:", error);
     }
-  }
+  };
 
   // refreshed the product list when the component mounts
   const refreshProductList = () => {
     getAllProduct();
-  }
-  useEffect(()=>{
-    getAllProduct()
-  },[])
+  };
+  useEffect(() => {
+    getAllProduct();
+  }, []);
 
   const availableProducts = dishes.filter((dish) => dish.availability === true);
-  const unavailableProducts = dishes.filter((dish) => dish.availability === false);
-  
+  const unavailableProducts = dishes.filter(
+    (dish) => dish.availability === false,
+  );
+
   const [addMenu, setAddMenu] = useState(false);
+
+  const handleAvailabilityToggle = async (id: string) => {
+    try {
+      if (!id) {
+        toast.error("Invalid dish ID");
+        return;
+      }
+
+      const response = await axiosInstance.put(
+        `/admin/change-product-availability/${id}`,
+      );
+
+      if (!response.status == 200) {
+        toast.error("Failed to update availability");
+        return;
+      }
+
+      toast.success("Availability updated successfully");
+      await refreshProductList();
+    } catch (err) {
+      toast.error(err);
+    }
+  };
 
   return (
     <div>
@@ -83,7 +106,10 @@ const Products = () => {
         <div className="fixed top-0 left-0 z-50 flex h-screen w-screen bg-black/40 ">
           <div className="flex-5" onClick={() => setAddMenu(false)}></div>
           <div className="flex-2 w-full h-screen bg-white">
-            <Input_product setAddMenu={setAddMenu} refreshProductList={refreshProductList} />
+            <Input_product
+              setAddMenu={setAddMenu}
+              refreshProductList={refreshProductList}
+            />
           </div>
         </div>
       )}
@@ -146,9 +172,7 @@ const Products = () => {
             </div>
           </div>
           <div>
-            <h1 className="text-2xl font-bold">
-              {unavailableProducts.length}
-            </h1>
+            <h1 className="text-2xl font-bold">{unavailableProducts.length}</h1>
           </div>
         </div>
 
@@ -228,8 +252,6 @@ const Products = () => {
               </thead>
               <tbody className="divide-y divide-orange-100">
                 {filteredDishes?.map((dish) => {
-                  const isAvailable = availableDishIds.has(dish._id);
-
                   return (
                     <tr
                       key={dish._id}
@@ -269,7 +291,7 @@ const Products = () => {
                             <Edit3 size={16} />
                           </button>
                           <button
-                            type="button"                    
+                            type="button"
                             aria-label={`Delete ${dish.name}`}
                             title={`Delete ${dish.name}`}
                             onClick={() => deleteDish(dish._id)}
@@ -283,19 +305,19 @@ const Products = () => {
                         <button
                           type="button"
                           role="switch"
-                          aria-checked={isAvailable}
+                          aria-checked={dish?.availability}
                           aria-label={`${dish?.availability ? "Disable" : "Enable"} ${dish.name}`}
-                          
-                          className={`relative inline-flex h-6 w-11 items-center rounded-full transition-colors ${dish.availability ? "bg-green-500" : "bg-gray-300"}`}
+                          onClick={() => handleAvailabilityToggle(dish._id)}
+                          className={`relative inline-flex h-6 w-11 items-center rounded-full transition-colors ${dish?.availability ? "bg-green-500" : "bg-gray-300"}`}
                         >
                           <span
-                            className={`inline-block h-4 w-4 transform rounded-full bg-white transition-transform ${dish.availability ? "translate-x-6" : "translate-x-1"}`}
+                            className={`inline-block h-4 w-4 transform rounded-full bg-white transition-transform ${dish?.availability ? "translate-x-6" : "translate-x-1"}`}
                           />
                         </button>
                         <span
                           className={`ml-2 text-xs font-medium ${dish?.availability ? "text-success" : "text-muted"}`}
                         >
-                          {dish.availability ? "Available" : "Unavailable"}
+                          {dish?.availability ? "Available" : "Unavailable"}
                         </span>
                       </td>
                     </tr>
