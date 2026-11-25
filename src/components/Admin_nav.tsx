@@ -2,6 +2,7 @@ import { Bell, Search } from "lucide-react"
 import BlinkingDot from "./Dot"
 import { useAuthStore } from "../store/authStore"
 import { useNavigate } from "react-router-dom"
+import avatar from "../assets/frontend_assets/avatar.png"
 
 const Admin_nav = () => {
     const {logout} = useAuthStore()
@@ -30,9 +31,14 @@ const Admin_nav = () => {
                 <input className="outline-none focus-within:outline-none" placeholder="search orders, menu items text-xs font-light "/>
             </div>
             <Bell className="text-primary cursor-pointer" size={20}/>
-            <div onClick={handleLogout} className="flex items-center justify-center">
-                
-                <div  className="bg-orange-500 rounded-full  w-8 h-8 flex items-center justify-center font-bold cursor-pointer">K</div>
+            <div onClick={handleLogout} className="flex items-center justify-center gap-2">
+                {/* admin avatar */}
+                <div  className=" rounded-full  w-8 h-8 flex items-center justify-center font-bold cursor-pointer">
+                    <img src={avatar} alt="Admin avatar" className="w-8 h-8 rounded-full object-cover"/>
+                </div>
+                <div>
+                    <p className="text-xs font-bold">💸ADMIN💸</p>
+                </div>
             </div>
         </div>
     </nav>
