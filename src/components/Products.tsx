@@ -72,6 +72,8 @@ const Products = () => {
     getAllProduct()
   },[])
 
+  const availableProducts = dishes.filter((dish) => dish.availability === true);
+  const unavailableProducts = dishes.filter((dish) => dish.availability === false);
   
   const [addMenu, setAddMenu] = useState(false);
 
@@ -130,7 +132,7 @@ const Products = () => {
             </div>
           </div>
           <div>
-            <h1 className="text-2xl font-bold">{availableDishIds.size}</h1>
+            <h1 className="text-2xl font-bold">{availableProducts.length}</h1>
           </div>
         </div>
 
@@ -145,7 +147,7 @@ const Products = () => {
           </div>
           <div>
             <h1 className="text-2xl font-bold">
-              {dishes?.length - availableDishIds.size}
+              {unavailableProducts.length}
             </h1>
           </div>
         </div>
@@ -158,7 +160,7 @@ const Products = () => {
             </div>
           </div>
           <div>
-            <h1 className="text-2xl font-bold">11</h1>
+            <h1 className="text-2xl font-bold">N/A</h1>
           </div>
         </div>
       </div>
@@ -238,7 +240,7 @@ const Products = () => {
                           <img
                             src={dish?.image_url}
                             alt={dish?.name}
-                            className="h-12 w-12 rounded-lg object-cover"
+                            className="h-12 w-12 rounded-lg object-contain"
                           />
                           <div>
                             <p className="font-semibold text-main">
@@ -282,18 +284,18 @@ const Products = () => {
                           type="button"
                           role="switch"
                           aria-checked={isAvailable}
-                          aria-label={`${isAvailable ? "Disable" : "Enable"} ${dish.name}`}
+                          aria-label={`${dish?.availability ? "Disable" : "Enable"} ${dish.name}`}
                           
-                          className={`relative inline-flex h-6 w-11 items-center rounded-full transition-colors ${isAvailable ? "bg-green-500" : "bg-gray-300"}`}
+                          className={`relative inline-flex h-6 w-11 items-center rounded-full transition-colors ${dish.availability ? "bg-green-500" : "bg-gray-300"}`}
                         >
                           <span
-                            className={`inline-block h-4 w-4 transform rounded-full bg-white transition-transform ${isAvailable ? "translate-x-6" : "translate-x-1"}`}
+                            className={`inline-block h-4 w-4 transform rounded-full bg-white transition-transform ${dish.availability ? "translate-x-6" : "translate-x-1"}`}
                           />
                         </button>
                         <span
-                          className={`ml-2 text-xs font-medium ${isAvailable ? "text-success" : "text-muted"}`}
+                          className={`ml-2 text-xs font-medium ${dish?.availability ? "text-success" : "text-muted"}`}
                         >
-                          {isAvailable ? "Available" : "Unavailable"}
+                          {dish.availability ? "Available" : "Unavailable"}
                         </span>
                       </td>
                     </tr>

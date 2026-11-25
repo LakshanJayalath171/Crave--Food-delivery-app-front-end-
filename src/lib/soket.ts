@@ -14,15 +14,4 @@ export const socket = io(SOCKET_URL, {
   },
 
 });
-
-socket.on("connect", () => {
-  console.log("🟢 Customer Socket Connected:", socket.id);
-});
-
-socket.on("disconnect", (reason) => {
-  console.log("🔴 Customer Socket Disconnected:", reason);
-});
-
-socket.on("connect_error", (error) => {
-  console.error("❌ Socket Connection Error:", error.message);
-});
+  
