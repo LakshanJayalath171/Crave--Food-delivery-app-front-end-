@@ -7,10 +7,6 @@ import Input_category from "./Input_category"
 
 const Categories = () => {
   const [categories, setCategories] = useState()
-  
-
-
-  
   const [pannel,setPannel] = useState(false)
 
   const getAllCategories = async() => {
@@ -29,11 +25,9 @@ const Categories = () => {
   },[])
 
   const activeCategories = categories?.filter((category) => category.availability === true)
-
   const inactiveCategories = categories?.filter((category) => category.availability === false)
 
-  console.log("activeCategories",activeCategories)
-  console.log("inactiveCategories",inactiveCategories)
+
   return (
     <div>
       {pannel && 
