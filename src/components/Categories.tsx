@@ -7,29 +7,10 @@ import Input_category from "./Input_category"
 
 const Categories = () => {
   const [categories, setCategories] = useState()
-  const [availableCategoryNames, setAvailableCategoryNames] = useState(() => new Set(menu_list.map((category) => category.menu_name)))
+  
 
-  const toggleCategoryAvailability = (categoryName: string) => {
-    setAvailableCategoryNames((currentNames) => {
-      const nextNames = new Set(currentNames)
-      if (nextNames.has(categoryName)) {
-        nextNames.delete(categoryName)
-      } else {
-        nextNames.add(categoryName)
-      }
-      return nextNames
-    })
-  }
 
-  const deleteCategory = (categoryName: string) => {
-    setCategories((currentCategories) => currentCategories.filter((category) => category.menu_name !== categoryName))
-    setAvailableCategoryNames((currentNames) => {
-      const nextNames = new Set(currentNames)
-      nextNames.delete(categoryName)
-      return nextNames
-    })
-  }
-
+  
   const [pannel,setPannel] = useState(false)
 
   const getAllCategories = async() => {
@@ -43,8 +24,16 @@ const Categories = () => {
   }
 
   useEffect(() => {
+    // eslint-disable-next-line react-hooks/set-state-in-effect
     getAllCategories()
-  })
+  },[])
+
+  const activeCategories = categories?.filter((category) => category.availability === true)
+
+  const inactiveCategories = categories?.filter((category) => category.availability === false)
+
+  console.log("activeCategories",activeCategories)
+  console.log("inactiveCategories",inactiveCategories)
   return (
     <div>
       {pannel && 
@@ -61,7 +50,7 @@ const Categories = () => {
           <div className="flex items-center gap-2">
             <h1 className="text-3xl font-bold">Categories</h1>
             <div className="text-xs font-light bg-orange-400/40 text-primary px-3 py-1 rounded-full">
-              {availableCategoryNames.size} Active Categories
+              0 Active Categories
             </div>
           </div>
           <p className="text-xs font-light text-secondary">
@@ -108,7 +97,8 @@ const Categories = () => {
             </div>
           </div>
           <div>
-            <h1 className="text-2xl font-bold text-main">{availableCategoryNames.size}</h1>
+            <h1 className="text-2xl font-bold text-main">{
+            activeCategories?.length}</h1>
             <p className="text-xs font-light text-secondary">
               Visible on consumer app
             </p>
@@ -125,7 +115,7 @@ const Categories = () => {
             </div>
           </div>
           <div>
-            <h1 className="text-2xl font-bold text-main">{food_list.filter((dish) => !categories?.some((category) => category?.name === dish.category)).length}</h1>
+            <h1 className="text-2xl font-bold text-main">{inactiveCategories?.length}</h1>
             <p className="text-xs font-light text-secondary">
               All 48 menu items categorized
             </p>
@@ -135,11 +125,11 @@ const Categories = () => {
       </div>
 
       <div className="flex items-center justify-start mt-4">
-        <div className=" px-3 py-1 cursor-pointer rounded-full text-xs font-semibold text-on-dark bg-orange-500">All(12)</div>
+        <div className=" px-3 py-1 cursor-pointer rounded-full text-xs font-semibold text-on-dark bg-orange-500">All({categories?.length})</div>
 
-        <div className=" px-3 py-1 cursor-pointer rounded-full text-xs font-semibold text-main">Active(10)</div>
+        <div className=" px-3 py-1 cursor-pointer rounded-full text-xs font-semibold text-main">Active({activeCategories?.length})</div>
 
-        <div className=" px-3 py-1 rounded-full text-xs font-semibold text-main">Inactive(2)</div>
+        <div className=" px-3 py-1 rounded-full text-xs font-semibold text-main">Inactive({inactiveCategories?.length})</div>
 
         
       </div>
@@ -150,8 +140,8 @@ const Categories = () => {
             key={index}
             category={category}
             productCount={food_list.filter((dish) => dish.category === category?.name).length}
-            isAvailable={availableCategoryNames.has(category?.name)}
             onEdit={() => undefined}
+            availability={category?.availability}
             onDelete={() => deleteCategory(category?.name)}
             onToggleAvailability={() => toggleCategoryAvailability(category?.name)}
           />

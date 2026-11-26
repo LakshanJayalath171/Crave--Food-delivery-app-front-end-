@@ -21,6 +21,7 @@ const Category_card = ({
   isAvailable,
   onEdit,
   onDelete,
+  availability,
   onToggleAvailability,
 }: CategoryCardProps) => {
 
@@ -68,17 +69,17 @@ const Category_card = ({
             type="button"
             role="switch"
             aria-checked={category?.availability}
-            aria-label={`${isAvailable ? "Disable" : "Enable"} ${category.menu_name}`}
+            aria-label={`${availability ? "Disable" : "Enable"} ${category.menu_name}`}
             onClick={onToggleAvailability}
-            className={`relative inline-flex h-6 w-11 shrink-0 items-center rounded-full transition-colors ${isAvailable ? "bg-green-500" : "bg-gray-300"}`}
+            className={`relative inline-flex h-6 w-11 shrink-0 items-center rounded-full transition-colors ${availability ? "bg-green-500" : "bg-gray-300"}`}
           >
-            <span className={`inline-block h-4 w-4 transform rounded-full bg-white transition-transform ${isAvailable ? "translate-x-6" : "translate-x-1"}`} />
+            <span className={`inline-block h-4 w-4 transform rounded-full bg-white transition-transform ${availability ? "translate-x-6" : "translate-x-1"}`} />
           </button>
         </div>
 
         <div className="mt-4 flex items-center justify-between border-t border-orange-100 pt-3">
-          <span className={`text-xs font-medium ${isAvailable ? "text-success" : "text-muted"}`}>
-            {isAvailable ? "Visible in storefront" : "Hidden from storefront"}
+          <span className={`text-xs font-medium ${availability ? "text-success" : "text-muted"}`}>
+            {availability ? "Visible in storefront" : "Hidden from storefront"}
           </span>
           <div className="flex items-center gap-1">
             <button type="button" onClick={onEdit} aria-label={`Edit ${category.menu_name}`} title={`Edit ${category.menu_name}`} className="rounded-md p-2 text-secondary transition-colors hover:bg-orange-100 hover:text-orange-600">
