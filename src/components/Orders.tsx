@@ -19,13 +19,9 @@ import { toast } from "react-toastify";
 import { useAdminOrders } from "../hooks/useAdminOrders";
 
 const Orders = () => {
-  const [selectedOrder, setSelectedOrder] = useState(null);
-  
-
   useAdminOrdersSocket();
-
   const { data :orders } = useAdminOrders();
-  console.log("orders", orders);
+  const [selectedOrder, setSelectedOrder] = useState(orders?.[0]);
 
   const updateOrderStatus = async (orderId, newStatus) => {
     try {
@@ -43,6 +39,13 @@ const Orders = () => {
       console.error(error);
     }
   };
+
+  const incompleted = orders?.filter((order) => order.status !== "completed" && order.status !== "cancelled");
+  const completed = orders?.filter((order) => order.status === "completed");
+  const declined = orders?.filter((order) => order.status === "cancelled");
+  const pending = orders?.filter((order) => order.status === "pending");
+  const preparing = orders?.filter((order) => order.status === "preparing");
+  const outForDelivery = orders?.filter((order) => order.status === "out-for-delivery");
 
   return (
     <div>
@@ -80,7 +83,7 @@ const Orders = () => {
             </div>
           </div>
           <div>
-            <h1 className="text-2xl font-bold text-main">142</h1>
+            <h1 className="text-2xl font-bold text-main">{orders?.length}</h1>
           </div>
         </div>
 
@@ -92,7 +95,7 @@ const Orders = () => {
             </div>
           </div>
           <div>
-            <h1 className="text-2xl font-bold text-main">8</h1>
+            <h1 className="text-2xl font-bold text-main">{pending?.length}</h1>
           </div>
         </div>
 
@@ -104,19 +107,19 @@ const Orders = () => {
             </div>
           </div>
           <div>
-            <h1 className="text-2xl font-bold text-main">142</h1>
+            <h1 className="text-2xl font-bold text-main">{preparing?.length}</h1>
           </div>
         </div>
 
         <div className="apple rounded-lg px-3 py-1">
           <div className="flex items-center justify-between">
-            <p className="text-main font-bold">All Orders</p>
+            <p className="text-main font-bold">Out for Delivery</p>
             <div className="bg-orange-500/40 rounded-lg p-2">
               <PaperBag className="text-main" size={20} />
             </div>
           </div>
           <div>
-            <h1 className="text-2xl font-bold text-main">142</h1>
+            <h1 className="text-2xl font-bold text-main">{outForDelivery?.length}</h1>
           </div>
         </div>
       </div>
@@ -146,15 +149,15 @@ const Orders = () => {
             </div>
 
             <div className="text-xs font-bold px-3 py-1 cursor-pointer rounded-full text-main">
-              Incompleted(2)
+              Incompleted({incompleted?.length})
             </div>
 
             <div className="text-xs font-bold px-3 py-1 cursor-pointer rounded-full text-main">
-              Completed(10)
+              Completed({completed?.length})
             </div>
 
             <div className="text-xs font-bold px-3 py-1 cursor-pointer rounded-full text-main">
-              Declined(10)
+              Declined({declined?.length})
             </div>
           </div>
         </div>

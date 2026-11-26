@@ -1,6 +1,6 @@
 import { useEffect, useState } from "react"
 import { CircleCheck, Eye, Folder, Plus } from "lucide-react"
-import { food_list, menu_list } from "../assets/frontend_assets/assets"
+import { food_list } from "../assets/frontend_assets/assets"
 import Category_card from "./Category_card"
 import axiosInstance from "../api/axiosInstance"
 import Input_category from "./Input_category"

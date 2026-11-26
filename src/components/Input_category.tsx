@@ -15,7 +15,7 @@ export type CategoryForm = {
   menu_image: string
 }
 
-const Input_category = ({ initialCategory, onSave, onCancel ,setPannel}: InputCategoryProps) => {
+const Input_category = ({ initialCategory ,setPannel}: InputCategoryProps) => {
   const [name, setName] = useState<string>("")
   const [image, setImage] = useState<File | null>(null)
   const [imagePreview, setImagePreview] = useState<string>("")
