@@ -254,7 +254,7 @@ const Products = () => {
                 {filteredDishes?.map((dish) => {
                   return (
                     <tr
-                      key={dish._id}
+                      key={dish?._id}
                       className="transition-colors hover:bg-orange-50/40"
                     >
                       <td className="px-4 py-3">

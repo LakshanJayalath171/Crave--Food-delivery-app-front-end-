@@ -4,6 +4,7 @@ import { food_list } from "../assets/frontend_assets/assets"
 import Category_card from "./Category_card"
 import axiosInstance from "../api/axiosInstance"
 import Input_category from "./Input_category"
+import { toast } from "react-toastify"
 
 const Categories = () => {
   const [categories, setCategories] = useState()
@@ -27,6 +28,21 @@ const Categories = () => {
   const activeCategories = categories?.filter((category) => category.availability === true)
   const inactiveCategories = categories?.filter((category) => category.availability === false)
 
+  const toggleCategoryAvailability = async (id:string) => {
+    try{
+      const response = await axiosInstance.put(`/admin/change-category-availability/${id}`)
+      if(response.data.success){
+        toast.success(response.data.message)
+        await getAllCategories()
+      }
+      else{
+        toast.error(response.data.message)
+      }
+    }
+    catch(err){
+      toast.error(err)
+    }
+  }
 
   return (
     <div>
@@ -137,7 +153,7 @@ const Categories = () => {
             onEdit={() => undefined}
             availability={category?.availability}
             onDelete={() => deleteCategory(category?.name)}
-            onToggleAvailability={() => toggleCategoryAvailability(category?.name)}
+            onToggleAvailability={() => toggleCategoryAvailability(category?._id)}
           />
         ))}
       </div>
