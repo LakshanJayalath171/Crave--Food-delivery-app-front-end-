@@ -28,6 +28,8 @@ const Categories = () => {
   const activeCategories = categories?.filter((category) => category.availability === true)
   const inactiveCategories = categories?.filter((category) => category.availability === false)
 
+  // logic for toggle availability of category
+
   const toggleCategoryAvailability = async (id:string) => {
     try{
       const response = await axiosInstance.put(`/admin/change-category-availability/${id}`)
@@ -41,6 +43,28 @@ const Categories = () => {
     }
     catch(err){
       toast.error(err)
+    }
+  }
+
+  // logic for delete category
+
+  const deleteCategory = async (id:string) => {
+    try{
+
+      const confirmDelete = window.confirm(`Are you sure you want to delete the category "${id}"? This action cannot be undone.`)
+
+      if (!confirmDelete) {
+        return
+      } 
+      const response = await axiosInstance.delete(`/admin/delete-category/${id}`)
+
+      if(response.data.success){
+        toast.success(response.data.message)
+        await getAllCategories()
+      }
+    }
+    catch(err){
+      toast.error(err.message)
     }
   }
 
@@ -152,7 +176,7 @@ const Categories = () => {
             productCount={food_list.filter((dish) => dish.category === category?.name).length}
             onEdit={() => undefined}
             availability={category?.availability}
-            onDelete={() => deleteCategory(category?.name)}
+            onDelete={() => deleteCategory(category?._id)}
             onToggleAvailability={() => toggleCategoryAvailability(category?._id)}
           />
         ))}
