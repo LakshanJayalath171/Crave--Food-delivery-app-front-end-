@@ -8,9 +8,10 @@ interface dishCardProps {
   price: string;
   description: string;
   id: string;
+  onSelect?: () => void;
 }
 
-const DishCard = ({ name, image, price, description, id }: dishCardProps) => {
+const DishCard = ({ name, image, price, description, id, onSelect }: dishCardProps) => {
   const {
     items,
     increaseQuantity,
@@ -50,19 +51,30 @@ const DishCard = ({ name, image, price, description, id }: dishCardProps) => {
   return (
     <div className="rounded-2xl card-hover">
       {/* image section */}
-      <div className="w-full h-48 rounded-t-2xl overflow-hidden flex items-center justify-center px-4 py-3">
+      <button
+        type="button"
+        onClick={onSelect}
+        aria-label={`View details for ${name}`}
+        className="w-full h-48 rounded-t-2xl overflow-hidden flex items-center justify-center px-4 py-3 cursor-pointer"
+      >
         <div>
           <img
             src={image}
-            alt="Dish"
+            alt={name}
             className="w-full h-36 object-cover rounded-lg"
           />
         </div>
-      </div>
+      </button>
       {/* details section */}
       <div className="px-2 py-3">
-        <h3 className="text-lg font-bold text-primary">{name}</h3>
-        <p className="text-xs font-light text-main">{description}</p>
+        <button
+          type="button"
+          onClick={onSelect}
+          className="block w-full text-left cursor-pointer"
+        >
+          <h3 className="text-lg font-bold text-primary">{name}</h3>
+          <p className="text-xs font-light text-main">{description}</p>
+        </button>
         <div className="flex items-center justify-between mt-3">
           <div className="flex items-center justify-center gap-1">
             <Star size={15} className="text-amber-500" />
