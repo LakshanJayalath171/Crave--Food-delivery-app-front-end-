@@ -19,7 +19,7 @@ const Category_card = ({
   category,
   productCount,
   isAvailable,
-  onEdit,
+  onEditCategory,
   onDelete,
   availability,
   onToggleAvailability,
@@ -77,7 +77,7 @@ const Category_card = ({
           <div className="flex items-center gap-1">
             <button
               type="button"
-              onClick={onEdit}
+              onClick={onEditCategory}
               aria-label={`Edit ${category.menu_name}`}
               title={`Edit ${category.menu_name}`}
               className="rounded-md p-2 text-secondary transition-colors hover:bg-orange-100 hover:text-orange-600"

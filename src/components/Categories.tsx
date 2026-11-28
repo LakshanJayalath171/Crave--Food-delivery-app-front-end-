@@ -9,6 +9,12 @@ import { toast } from "react-toastify"
 const Categories = () => {
   const [categories, setCategories] = useState()
   const [pannel,setPannel] = useState(false)
+  const [activeCategory,setActiveCategory] = useState()
+
+  const onEditCategory = (category:any) => {
+    setActiveCategory(category)
+    setPannel(true)
+  }
 
   const getAllCategories = async() => {
     try{
@@ -174,10 +180,10 @@ const Categories = () => {
             key={index}
             category={category}
             productCount={food_list.filter((dish) => dish.category === category?.name).length}
-            onEdit={() => undefined}
             availability={category?.availability}
             onDelete={() => deleteCategory(category?._id)}
             onToggleAvailability={() => toggleCategoryAvailability(category?._id)}
+            onEditCategory={() => onEditCategory(category)}
           />
         ))}
       </div>

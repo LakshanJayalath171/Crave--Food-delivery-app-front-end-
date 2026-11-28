@@ -15,6 +15,8 @@ import DishCard from "../components/DishCard";
 import Footer from "../components/Footer";
 import { useEffect, useRef, useState } from "react";
 import axiosInstance from "../api/axiosInstance";
+import { useNavigate } from "react-router-dom";
+
 
 type HomeCategory = {
   _id?: string;
@@ -24,6 +26,7 @@ type HomeCategory = {
 };
 
 const Home = () => {
+  const navigate = useNavigate();
   const [category, setCategory] = useState<HomeCategory[]>([]);
   const categorySliderRef = useRef<HTMLDivElement>(null);
   const [canScrollPrevious, setCanScrollPrevious] = useState(false);
@@ -134,11 +137,11 @@ const Home = () => {
 
             {/* button */}
             <div className="grid grid-cols-2 gap-4 mt-6">
-              <button className="btn-primary flex items-center">
+              <button onClick={() => navigate("/explore")} className="btn-primary flex items-center">
                 Explore Foods
                 <ArrowRight />
               </button>
-              <button className="btn-secondary">Order Now</button>
+              <button onClick={() => navigate("/my_orders")} className="btn-secondary">Order Now</button>
             </div>
 
             {/* down section */}
